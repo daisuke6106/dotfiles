@@ -5,6 +5,8 @@
 set fenc=utf-8
 " 入力中のコマンドをステータスに表示する
 set showcmd
+" 所定のキー押下にESCに割り当て
+inoremap <silent> jj <ESC>
 
 " ==================================================
 " 表示関連
@@ -35,6 +37,9 @@ set ruler
 autocmd Colorscheme * highlight FullWidthSpace ctermbg=white
 autocmd VimEnter * match FullWidthSpace /　/
 colorscheme desert
+" ステータスバーに文字コード、改行コードを表示
+set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+
 
 " ==================================================
 " タブ関連
