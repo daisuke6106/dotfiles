@@ -7,6 +7,11 @@ set fenc=utf-8
 set showcmd
 " 所定のキー押下にESCに割り当て
 inoremap <silent> jj <ESC>
+" 移動キーをずらす
+nnoremap j h
+nnoremap k j
+nnoremap l k
+nnoremap ; l
 
 " ==================================================
 " 表示関連
@@ -30,8 +35,8 @@ set laststatus=2
 " コマンドラインの補完
 set wildmode=list:longest
 " 折り返し時に表示行単位での移動できるようにする
-nnoremap j gj
-nnoremap k gk
+" nnoremap j gj
+" nnoremap k gk
 " カーソルの位置表示を行う
 set ruler
 autocmd Colorscheme * highlight FullWidthSpace ctermbg=white
