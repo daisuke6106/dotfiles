@@ -5,13 +5,40 @@
 set fenc=utf-8
 " 入力中のコマンドをステータスに表示する
 set showcmd
+
+" ==================================================
+" キーバインド設定
+" ==================================================
 " 所定のキー押下にESCに割り当て
 inoremap <silent> jj <ESC>
+
 " 移動キーをずらす
-nnoremap j h
-nnoremap k j
-nnoremap l k
-nnoremap ; l
+" nnoremap j h
+" nnoremap k j
+" nnoremap l k
+" nnoremap ; l
+
+" 折り返し時に表示行単位での移動できるようにする
+" nnoremap j gj
+" nnoremap k gk
+
+" ==================================================
+" 保存関連
+" ==================================================
+" スワップファイルを作成しない
+set noswapfile
+
+" ファイルを上書きする前にバックアップを作ることを無効化
+set nowritebackup
+set nobackup
+
+" ==================================================
+" ヤンク関連
+" ==================================================
+" yでコピーした時にクリップボードに入る
+set guioptions+=a
+" ヤンクでクリップボードにコピー
+set clipboard=unnamed,autoselect
 
 " ==================================================
 " 表示関連
@@ -34,9 +61,6 @@ set showmatch
 set laststatus=2
 " コマンドラインの補完
 set wildmode=list:longest
-" 折り返し時に表示行単位での移動できるようにする
-" nnoremap j gj
-" nnoremap k gk
 " カーソルの位置表示を行う
 set ruler
 autocmd Colorscheme * highlight FullWidthSpace ctermbg=white
@@ -44,7 +68,10 @@ autocmd VimEnter * match FullWidthSpace /　/
 colorscheme desert
 " ステータスバーに文字コード、改行コードを表示
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
-
+" 自動改行させない
+set nowrap
+" vim の矩形選択で文字が無くても右へ進める
+set virtualedit=block
 
 " ==================================================
 " タブ関連
