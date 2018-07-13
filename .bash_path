@@ -1,0 +1,12 @@
+# HOME set
+JAVA_HOME=/opt/java/jdk-10.0.1
+JYTHON_HOME=/opt/jython
+ECLIPSE_HOME=~/eclipse/java-photon/eclipse
+
+# JAVA
+export PATH=${JAVA_HOME}/bin:${PATH}
+# JYTHON
+export PATH=${JYTHON_HOME}/bin:${PATH}
+# JYTHON
+export PATH=${ECLIPSE_HOME}:${PATH}
+
