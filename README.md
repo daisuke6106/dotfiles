@@ -15,10 +15,10 @@
     ln -s `pwd`/.bash_aliases ~/.bash_aliases
 
     # .bashrcに追加
-    vi ~/bashrc
-    if [ -f ~/.bash_aliases ]; then↲
-        . ~/.bash_aliases↲
-    fi↲
+    vi ~/.bashrc
+    if [ -f ~/.bash_aliases ]; then
+        . ~/.bash_aliases
+    fi
 
 ## path設定ファイルの適用
 
@@ -28,7 +28,7 @@
     ln -s `pwd`/.bash_path ~/.bash_path
 
     # .bashrcに追加
-    vi ~/bashrc
-    if [ -f ~/.bash_path ]; then↲
-        . ~/.bash_path↲
-    fi↲
+    vi ~/.bashrc
+    if [ -f ~/.bash_path ]; then
+        . ~/.bash_path
+    fi
