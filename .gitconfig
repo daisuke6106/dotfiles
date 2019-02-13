@@ -1,0 +1,9 @@
+[core]
+	editor = vim -c \"set fenc=utf-8\"
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[user]
+	name = daisuke6106
+	email = daisuke6106@gmail.com

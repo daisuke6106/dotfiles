@@ -1,7 +1,7 @@
 # HOME set
-JAVA_HOME=/opt/java/jdk-10.0.1
-JYTHON_HOME=/opt/jython
-ECLIPSE_HOME=~/eclipse/java-photon/eclipse
+JAVA_HOME=/opt/java/jdk-11.0.2
+JYTHON_HOME=/opt/jython/jython2.7.0
+ECLIPSE_HOME=~/eclipse/java-2018-12/eclipse
 
 # JAVA
 export PATH=${JAVA_HOME}/bin:${PATH}
