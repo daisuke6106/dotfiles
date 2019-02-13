@@ -1,0 +1,19 @@
+[global_config]
+[keybindings]
+  move_tab_left = <Primary>Page_Down
+  move_tab_right = <Primary>Page_Up
+  new_tab = <Alt>a
+  split_horiz = <Primary>Down
+  split_vert = <Primary>Right
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"

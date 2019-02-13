@@ -32,3 +32,11 @@
     if [ -f ~/.bash_path ]; then
         . ~/.bash_path
     fi
+
+## terminator設定ファイルの適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.config/terminator/config /.config/terminator/config.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.config/terminator/config ~/.config/terminator/config
+
