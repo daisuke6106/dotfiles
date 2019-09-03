@@ -40,3 +40,11 @@ alias v='vim'
 # https://weblabo.oscasierra.net/openssl-genrsa-public-1/
 
 # https://qiita.com/suthio/items/2760e4cff0e185fe2db9
+
+
+# ==================================================================================
+# daisuke6106 tools
+# ==================================================================================
+# alias dk.passwd.encrypt='openssl rsautl -encrypt -pubin -inkey ${GIT_REPO_DOTFILES}/.ssh/daisuke6106.rsa4096.key.pub -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd'
+alias dk.passwd.encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
+alias dk.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc -md md5"

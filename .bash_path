@@ -1,3 +1,13 @@
+# =======================================================================
+# GIT
+# =======================================================================
+GIT_WORKSPACE=~/github_workspace
+GIT_REPO_DOTFILES=${GIT_WORKSPACE}/dotfiles
+GIT_REPO_ETCFILES=${GIT_WORKSPACE}/etcfiles
+GIT_REPO_PRVFILES=${GIT_WORKSPACE}/prvfiles
+
+
+
 # HOME set
 JAVA_HOME=/opt/java/jdk-11.0.2
 JYTHON_HOME=/opt/jython/jython2.7.0
