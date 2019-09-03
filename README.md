@@ -54,3 +54,10 @@
     # ファイルをシンボリックリンクで差し替え
     ln -s `pwd`/.gitconfig ~/.gitconfig
 
+## .sshファイルの適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.ssh ~/.ssh.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.ssh ~/.ssh
+
