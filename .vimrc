@@ -100,3 +100,8 @@ set wrapscan
 set hlsearch
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+
+"対応する括弧に移動
+nnoremap [ %
+nnoremap ] %

@@ -45,6 +45,28 @@ alias v='vim'
 # ==================================================================================
 # daisuke6106 tools
 # ==================================================================================
+ALIAS_HEADER="daisuke6106"
+
+# ----------------------------------------------------------------------------------
+# password memo
+# ----------------------------------------------------------------------------------
 # alias dk.passwd.encrypt='openssl rsautl -encrypt -pubin -inkey ${GIT_REPO_DOTFILES}/.ssh/daisuke6106.rsa4096.key.pub -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd'
-alias dk.passwd.encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
-alias dk.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc -md md5"
+alias ${ALIAS_HEADER}.passwd.encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
+alias ${ALIAS_HEADER}.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc -md md5"
+
+# ----------------------------------------------------------------------------------
+# GitHub
+# ----------------------------------------------------------------------------------
+FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
+daisuke6106.git.pull.xfiles() {
+	for i in ${FILES_DIR_LIST[@]};
+	do
+		echo "# --------------------"
+		echo "# Target:"${i}
+		echo "# --------------------"
+		cd ${GIT_WORKSPACE}/${i}
+		git pull origin
+		cd -
+	done
+}
+
