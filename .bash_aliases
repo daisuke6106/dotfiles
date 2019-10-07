@@ -12,6 +12,9 @@ alias g='grep'
 alias gs='git status'
 alias gd='git diff'
 
+alias cd='pushd'
+alias bk='popd'
+
 alias vi='vim'
 alias v='vim'
 
