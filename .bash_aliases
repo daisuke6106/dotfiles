@@ -12,8 +12,8 @@ alias g='grep'
 alias gs='git status'
 alias gd='git diff'
 
-alias cd='pushd'
-alias bk='popd'
+# alias cd='pushd'
+# alias bk='popd'
 
 alias vi='vim'
 alias v='vim'
@@ -61,15 +61,35 @@ alias ${ALIAS_HEADER}.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PR
 # GitHub
 # ----------------------------------------------------------------------------------
 FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
+daisuke6106.git.status.xfiles() {
+	for i in ${FILES_DIR_LIST[@]};
+	do
+		echo "# --------------------"
+		echo "# Target:"${i}
+		echo "# --------------------"
+		if [ -d ${GIT_WORKSPACE}/${i} ]; then
+			cd ${GIT_WORKSPACE}/${i} 1>/dev/null
+			git status
+			cd -
+		else
+			echo "dir is not found."
+		fi
+	done
+}
+
 daisuke6106.git.pull.xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
 		echo "# Target:"${i}
 		echo "# --------------------"
-		cd ${GIT_WORKSPACE}/${i}
-		git pull origin
-		cd -
+		if [ -d ${GIT_WORKSPACE}/${i} ]; then
+			cd ${GIT_WORKSPACE}/${i}
+			git pull origin
+			cd -
+		else
+			echo "dir is not found."
+		fi
 	done
 }
 
