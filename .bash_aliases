@@ -48,7 +48,7 @@ alias v='vim'
 # ==================================================================================
 # daisuke6106 tools
 # ==================================================================================
-ALIAS_HEADER="daisuke6106"
+ALIAS_HEADER="d"
 
 # ----------------------------------------------------------------------------------
 # password memo
@@ -58,10 +58,18 @@ alias ${ALIAS_HEADER}.passwd.encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVF
 alias ${ALIAS_HEADER}.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc -md md5"
 
 # ----------------------------------------------------------------------------------
+# edit file
+# ----------------------------------------------------------------------------------
+alias ${ALIAS_HEADER}.vi.bash_vimrc="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias ${ALIAS_HEADER}.vi.bash_path="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias ${ALIAS_HEADER}.vi.bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
+
+# ----------------------------------------------------------------------------------
 # GitHub
 # ----------------------------------------------------------------------------------
 FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
-daisuke6106.git.status.xfiles() {
+d.git.status.xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
@@ -77,7 +85,7 @@ daisuke6106.git.status.xfiles() {
 	done
 }
 
-daisuke6106.git.pull.xfiles() {
+d.git.pull.xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
