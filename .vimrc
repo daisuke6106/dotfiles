@@ -22,6 +22,10 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
+inoremap <C-ｊ> <Down>
+inoremap <C-ｋ> <Up>
+inoremap <C-ｈ> <Left>
+inoremap <C-ｌ> <Right>
 inoremap ・ <ESC>/
 
 " 日本語入力がオンのままでも使えるコマンド(Enterキーは必要)
