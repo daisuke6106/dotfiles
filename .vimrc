@@ -14,6 +14,29 @@ set colorcolumn=100
 " ==================================================
 " 所定のキー押下にESCに割り当て
 inoremap <silent> jj <ESC>
+" 日本語入力で”っj”と入力してもEnterキーで確定させればインサートモードを抜ける
+inoremap <silent> っｊ <ESC>
+
+" 入力モードでのカーソル移動
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+inoremap ・ <ESC>/
+
+" 日本語入力がオンのままでも使えるコマンド(Enterキーは必要)
+nnoremap あ a
+nnoremap い i
+nnoremap う u
+nnoremap お o
+nnoremap っｄ dd
+nnoremap っｙ yy
+nnoremap ｐ p
+
+nnoremap ｈ h
+nnoremap ｊ j
+nnoremap ｋ k
+nnoremap ｌ l
 
 " 移動キーをずらす
 " nnoremap j h

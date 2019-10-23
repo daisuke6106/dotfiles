@@ -21,27 +21,25 @@ alias v='vim'
 # ==================================================================================
 # SSH
 # ==================================================================================
-# SSH SAKUSEI 
+# SSH 作成 
 # alias daisuke6106.keygen="ssh-keygen -t rsa -b 4096 -C \"daisuke6106@gmail.com\""
 
-
-# himitukagisakusei
+# 秘密鍵作成
 # openssl genrsa -aes256 4096 > ~/.ssh/daisuke6106.rsa4096.key
 
-# kouikaikagisakusei
+# 公開鍵作成
 # openssl rsa -pubout < ~/.ssh/daisuke6106.rsa4096.key > ~/.ssh/daisuke6106.rsa4096.key.pub
 
-# anngouka
+# 暗号化
 # echo "Hello World" | openssl rsautl -encrypt -pubin -inkey ~/.ssh/daisuke6106.rsa4096.key.pub > message.dat
 
-# fukugouka
+# 復号化
 # cat message.dat | openssl rsautl -decrypt -inkey ~/.ssh/daisuke6106.rsa4096.key
 
-# sannkou
+# 参考
 # https://weblabo.oscasierra.net/openssl-public-key-crypto/
 # https://weblabo.oscasierra.net/openssl-genrsa-secret-1/
 # https://weblabo.oscasierra.net/openssl-genrsa-public-1/
-
 # https://qiita.com/suthio/items/2760e4cff0e185fe2db9
 
 
@@ -60,8 +58,8 @@ alias ${ALIAS_HEADER}.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PR
 # ----------------------------------------------------------------------------------
 # edit file
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.vi.bash_vimrc="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
-alias ${ALIAS_HEADER}.vi.bash_path="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias ${ALIAS_HEADER}.vi.vimrc="vi ${GIT_REPO_DOTFILES}/.vimrc"
+alias ${ALIAS_HEADER}.vi.bash_path="vi ${GIT_REPO_DOTFILES}/.bash_path"
 alias ${ALIAS_HEADER}.vi.bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
 alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
 
