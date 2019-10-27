@@ -66,7 +66,25 @@ alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
 # ----------------------------------------------------------------------------------
 # GitHub
 # ----------------------------------------------------------------------------------
+
+
 FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
+d.git.remote_set_url.xfiles() {
+	for i in ${FILES_DIR_LIST[@]};
+	do
+		echo "# --------------------"
+		echo "# Target:"${i}
+		echo "# --------------------"
+		if [ -d ${GIT_WORKSPACE}/${i} ]; then
+			cd ${GIT_WORKSPACE}/${i} 1>/dev/null
+			git remote set-url origin git@github.com:daisuke6106/${i}.git
+			cd -
+		else
+			echo "dir is not found."
+		fi
+	done
+}
+
 d.git.status.xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
