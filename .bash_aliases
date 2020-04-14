@@ -66,7 +66,11 @@ alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
 # ----------------------------------------------------------------------------------
 # GitHub
 # ----------------------------------------------------------------------------------
-
+# githubと接続されているリポジトリをssh接続に切り替え
+# git remote set-url origin git@github.com:[ユーザID]/[リポジトリ].git
+# git remote set-url origin git@github.com:daisuke6106/dotfiles.git
+# git remote set-url origin git@github.com:daisuke6106/etcfiles.git
+# git remote set-url origin git@github.com:daisuke6106/prvfiles.git
 
 FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
 d.git.remote_set_url.xfiles() {

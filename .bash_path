@@ -6,17 +6,20 @@ GIT_REPO_DOTFILES=${GIT_WORKSPACE}/dotfiles
 GIT_REPO_ETCFILES=${GIT_WORKSPACE}/etcfiles
 GIT_REPO_PRVFILES=${GIT_WORKSPACE}/prvfiles
 
-
-
+# =======================================================================
 # HOME set
-JAVA_HOME=/opt/java/jdk-11.0.2
+# =======================================================================
+JAVA_HOME=/opt/java/jdk-11.0.5
 JYTHON_HOME=/opt/jython/jython2.7.0
-ECLIPSE_HOME=~/eclipse/java-2018-12/eclipse
+ECLIPSE_HOME=~/eclipse/jee-2019-09/enterprise_java_developers/eclipse
+PYCHARM_HOME=/opt/pycharm/pycharm-community-2019.2.5/bin
 
 # JAVA
 export PATH=${JAVA_HOME}/bin:${PATH}
 # JYTHON
 export PATH=${JYTHON_HOME}/bin:${PATH}
-# JYTHON
+# ECLIPSE
 export PATH=${ECLIPSE_HOME}:${PATH}
+# Pycharm
+export PATH=${PYCHARM_HOME}:${PATH}
 
