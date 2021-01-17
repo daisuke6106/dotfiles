@@ -149,7 +149,7 @@ d.get_filetimestanmp_info() {
 
 d.create_timestanmp_syboliclink() {
 	if [ $# != 2 ]; then
-		"argument fail."
+		echo "argument fail."
 		echo ""
 		echo "Usage:"
 		echo "d.create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
