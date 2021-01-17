@@ -14,6 +14,16 @@ JYTHON_HOME=/opt/jython/jython2.7.0
 ECLIPSE_HOME=~/eclipse/jee-2019-09/enterprise_java_developers/eclipse
 PYCHARM_HOME=/opt/pycharm/pycharm-community-2019.2.5/bin
 
+# =======================================================================
+# OTHER
+# =======================================================================
+PRAWLER_HOME=${GIT_WORKSPACE}/prawler
+
+# =======================================================================
+# PYTHONPATH
+# =======================================================================
+export PYTHONPATH="${PRAWLER_HOME}:${PYTHONPATH}"
+
 # JAVA
 export PATH=${JAVA_HOME}/bin:${PATH}
 # JYTHON
@@ -22,4 +32,7 @@ export PATH=${JYTHON_HOME}/bin:${PATH}
 export PATH=${ECLIPSE_HOME}:${PATH}
 # Pycharm
 export PATH=${PYCHARM_HOME}:${PATH}
+# Prawler
+export PATH=${PRAWLER_HOME}:${PATH}
+
 
