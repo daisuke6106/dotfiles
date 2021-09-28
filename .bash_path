@@ -15,6 +15,11 @@ ECLIPSE_HOME=~/eclipse/jee-2019-09/enterprise_java_developers/eclipse
 PYCHARM_HOME=/opt/pycharm/pycharm-community-2019.2.5/bin
 
 # =======================================================================
+# SSLKEY
+# =======================================================================
+SSLKEY_PUB_NONPASS=~/.ssh/daisuke6106.rsa4096.key.pub
+SSLKEY_PRV_NONPASS=~/.ssh/daisuke6106.rsa4096.key
+# =======================================================================
 # OTHER
 # =======================================================================
 PRAWLER_HOME=${GIT_WORKSPACE}/prawler

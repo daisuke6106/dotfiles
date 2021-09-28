@@ -79,11 +79,11 @@ alias ${ALIAS_HEADER}.ssh.dev.vitualbox="ssh dev@dev.vitualbox"
 # ----------------------------------------------------------------------------------
 # 暗号化：標準入力を暗号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.enc="openssl rsautl -encrypt -pubin -inkey ~/.ssh/daisuke6106.rsa4096.key.pub | xxd -p | tr a-z A-Z | tr -d '\n'"
+alias ${ALIAS_HEADER}.enc="openssl rsautl -encrypt -pubin -inkey ${SSLKEY_PUB_NONPASS} | xxd -p | tr a-z A-Z | tr -d '\n'"
 # ----------------------------------------------------------------------------------
 # 復号化：標準入力を復号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.unenc="xxd -r -p | openssl rsautl -decrypt -inkey ~/.ssh/daisuke6106.rsa4096.key"
+alias ${ALIAS_HEADER}.unenc="xxd -r -p | openssl rsautl -decrypt -inkey ${SSLKEY_PRV_NONPASS}"
 
 # ----------------------------------------------------------------------------------
 # password memo
