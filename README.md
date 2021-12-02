@@ -61,3 +61,6 @@
     # ファイルをシンボリックリンクで差し替え
     ln -s `pwd`/.ssh ~/.ssh
 
+
+## クローン済のリポジトリがpull,pushできなかった場合
+git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
