@@ -101,6 +101,31 @@ alias ${ALIAS_HEADER}.vi.bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
 alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
 
 # ----------------------------------------------------------------------------------
+# vagrant
+# ----------------------------------------------------------------------------------
+# 参考：https://www.suzu6.net/posts/221-how-to-install-vagrant-on-ubuntu/
+# ==========================
+# インストール
+# ==========================
+# # パッケージリストを更新
+# $ sudo apt update
+# # Vagrantをダウンロード
+# $ curl -O https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.deb
+# # Vagrantをインストール
+# $ sudo apt install ./vagrant_2.2.18_x86_64.deb
+# # バージョン確認
+# $ vagrant --version
+# Vagrant 2.2.7
+
+
+
+
+
+
+
+
+
+# ----------------------------------------------------------------------------------
 # GitHub
 # ----------------------------------------------------------------------------------
 # githubと接続されているリポジトリをssh接続に切り替え
