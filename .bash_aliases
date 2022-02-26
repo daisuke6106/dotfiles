@@ -129,14 +129,127 @@ alias d.chi.off="sudo chattr -i -R "
 # ----------------------------------------------------------------------------------
 # 拡張子取得
 # ----------------------------------------------------------------------------------
-function extname(){
+function d.extname(){
 	if [ $# == 0 ]; then
 		echo "No arguments set." 1>&2
+		return 1
+	fi
+	if [ $# == 1 -a "$1" == "-" ]; then
+		while read line
+		do
+			# if [ ! -e $line ]; then
+			# 	echo "Not exists. path=[$i]" 1>&2
+			# 	return 1
+			# fi
+			# if [ ! -f $line ]; then
+			# 	echo "Not such file. path=[$i]" 1>&2
+			# 	return 1
+			# fi
+			basename $line | awk -F '.' '{if(NF > 1){print $NF}}'
+		done
+	else
+		for line in $*
+		do
+			# if [ ! -e $line ]; then
+			# 	echo "Not exists. path=[$i]" 1>&2
+			# 	return 1
+			# fi
+			# if [ ! -f $line ]; then
+			# 	echo "Not such file. path=[$i]" 1>&2
+			# 	return 1
+			# fi
+			basename $line | awk -F '.' '{if(NF > 1){print $NF}}'
+		done
+	fi
+}
+
+
+# ----------------------------------------------------------------------------------
+# 日付パーサ
+# ----------------------------------------------------------------------------------
+function d.export.split_yyyymmddhhmmss {
+	if [ $# != 1 ]; then
+		echo "only one argument can be specified." 1>&2
+		return 1
+	fi
+	if [ $( echo -n "$1" | wc -m ) != 14 ]; then
+		echo "arguments are not yyyymmddhhmmss format. args=[$1]" 1>&2
+		return 1
+	fi
+	yyyymmdd="$( echo $1 | cut -c 1-8 )"
+	hhmmss="$( echo $1 | cut -c 9-14 )"
+	if [ "$( date +'%Y%m%d' -d "${yyyymmdd}" )" != "${yyyymmdd}" ]; then
+		echo "invalid date. args=[$1]" 1>&2
+		return 1
+	fi
+
+	if [ "$(echo ${hhmmss} | sed -e "s/^[0-2][0-9][0-5][0-9][0-5][0-9]$//g")" != "" ]; then
+		echo "invalid time. args=[$1]" 1>&2
+		return 1
+	fi
+	export YYYYMMDD="${yyyymmdd}"
+	export YYYY=$(echo "${yyyymmdd}" | cut -c 1-4)
+	export MM=$(echo "${yyyymmdd}" | cut -c 5-6)
+	export DD=$(echo "${yyyymmdd}" | cut -c 7-8)
+	export HHMMSS="${hhmmss}"
+	export HH=$(echo "${hhmmss}" | cut -c 1-2)
+	export MI=$(echo "${hhmmss}" | cut -c 3-4)
+	export SS=$(echo "${hhmmss}" | cut -c 5-6)
+
+}
+
+# ----------------------------------------------------------------------------------
+# 画像メタデータ
+# ----------------------------------------------------------------------------------
+function d.echo.exif_datetime_yyyymmddhhmmss {
+	if [ $# == 0 ]; then
+		echo "No arguments set." 1>&2
+		return 1
 	fi
 	for i in $*
 	do
-		echo $i | basename $i | awk -F '.' '{if(NF > 1){print $NF}}'
+		if [ ! -e $i ]; then
+			echo "Not exists. path=[$i]" 1>&2
+			continue
+		fi
+		if [ ! -f $i ]; then
+			echo "Not such file. path=[$i]" 1>&2
+			continue
+		fi
+		# identify -verbose
+		echo $(identify -format "%[exif:DateTime]\n" $i | sed -e "s/://g" -e "s/ //g")
 	done
+}
+
+# ----------------------------------------------------------------------------------
+# 画像メタデータ
+# ----------------------------------------------------------------------------------
+d.echo.filetimestanmp_yyyymmddhhmmss() {
+	if [ $# != 1 ]; then
+		"argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.get_filetimestanmp_info TARGET_FILE"
+		return 1
+	fi
+	TARGET_FILE="$1"
+	if [ ! -f ${TARGET_FILE} ]; then
+		echo "[${TARGET_FILE}] is not file."
+		echo ""
+		echo "Usage:"
+		echo "d.get_filetimestanmp_info TARGET_FILE"
+		return 1
+	fi
+	echo $(ls -l --time-style=+'%Y%m%d%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYYMMDD_HHMMSS=$(ls -l --time-style=+'%Y%m%d_%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYYMMDD_HHMM=$(ls -l --time-style=+'%Y%m%d_%H%M' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYYMMDD_HH=$(ls -l --time-style=+'%Y%m%d_%H' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYYMMDD=$(ls -l --time-style=+'%Y%m%d' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYYMM=$(ls -l --time-style=+'%Y%m' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_YYYY=$(ls -l --time-style=+'%Y' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_HHMMSS=$(ls -l --time-style=+'%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_HHMM=$(ls -l --time-style=+'%H%M' "${TARGET_FILE}" | awk '{print $6}')
+	# export FILETIMESTAMP_HH=$(ls -l --time-style=+'%H' "${TARGET_FILE}" | awk '{print $6}')
 }
 
 
@@ -197,32 +310,6 @@ d.git.pull.xfiles() {
 		fi
 	done
 }
-d.get_filetimestanmp_info() {
-	if [ $# != 1 ]; then
-		"argument fail."
-		echo ""
-		echo "Usage:"
-		echo "d.get_filetimestanmp_info TARGET_FILE"
-		return 1
-	fi
-	TARGET_FILE="$1"
-	if [ ! -f ${TARGET_FILE} ]; then
-		echo "[${TARGET_FILE}] is not file."
-		echo ""
-		echo "Usage:"
-		echo "d.get_filetimestanmp_info TARGET_FILE"
-		return 1
-	fi
-	export FILETIMESTAMP_YYYYMMDD_HHMMSS=$(ls -l --time-style=+'%Y%m%d_%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_YYYYMMDD_HHMM=$(ls -l --time-style=+'%Y%m%d_%H%M' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_YYYYMMDD_HH=$(ls -l --time-style=+'%Y%m%d_%H' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_YYYYMMDD=$(ls -l --time-style=+'%Y%m%d' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_YYYYMM=$(ls -l --time-style=+'%Y%m' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_YYYY=$(ls -l --time-style=+'%Y' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_HHMMSS=$(ls -l --time-style=+'%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_HHMM=$(ls -l --time-style=+'%H%M' "${TARGET_FILE}" | awk '{print $6}')
-	export FILETIMESTAMP_HH=$(ls -l --time-style=+'%H' "${TARGET_FILE}" | awk '{print $6}')
-}
 
 d.create_timestanmp_syboliclink() {
 	if [ $# != 2 ]; then
@@ -273,3 +360,9 @@ d.create_timestanmp_syboliclink() {
 	ZERO_PADED_INDEX=$(printf "%03d" ${INDEX})
 	ln -s "${TARGET_FILE}" "${OUTPUT_DIR}/${FILETIMESTAMP_YYYYMMDD_HHMMSS}_${FILE_HASH}_${ZERO_PADED_INDEX}${TARGET_FILENAME_EXTENSION}"
 }
+
+# ==================================================================================
+# URL
+# ==================================================================================
+# [シェル] カッコの意味と役割まとめ [Bash, Linux]
+# https://webbibouroku.com/Blog/Article/shell-paren-brace-bracket#outline__7
