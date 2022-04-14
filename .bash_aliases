@@ -367,7 +367,7 @@ d.create_timestanmp_syboliclink() {
 # Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
 # 標準出力に全体行、追加、削除の行数などの出力も行う。
 # ----------------------------------------------------------------------------------
-d.git.output_diff() {
+function d.git.output_diff() {
 	if [ $# != 5 ]; then
 		echo "argument fail."
 		echo ""
@@ -418,32 +418,31 @@ d.git.output_diff() {
 	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly
 
 	# ファイルをブランチ間でDIFFし、追加、削除した行のみ取り出す。
-	git diff ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} | egrep "^\+|^\-" | egrep -v "^[\+\-]{3}" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff
+	git diff ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} | egrep "^\+|^\-" | egrep -v "^[\+\-]{3}" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | \
+	egrep -v "^\+$|^\+ +$|^\+[[:space:]]+$|^\+ *//|^\+[[:space:]]+//|^\+ */\*|^\+ *\*|import|^\+ *#.*|^\+ *--.*" | \
+	egrep -v "^\-$|^\- +$|^\-[[:space:]]+$|^\- *//|^\-[[:space:]]+//|^\- */\*|^\- *\*|import|^\- *#.*|^\- *--.*"   \
+	> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly
 
 	# 追加＋削除行のみ取り出す。
-	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only
-	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly
 
-	# 追加行からコメント行を削除！
-	cat  ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only \
-	egrep -v "^\+$|^\+ +$|^\+[[:space:]]+$|^\+ *//|^\+[[:space:]]+//|^\+ */\*|^\+ *\*|import|^\+ *#.*|^\+ *--.*" \
-	> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly
-
-	# 削除行からコメント行を削除！
-	cat  ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only \
-	egrep -v "^\-$|^\- +$|^\-[[:space:]]+$|^\- *//|^\-[[:space:]]+//|^\- */\*|^\- *\*|import|^\- *#.*|^\- *--.*" \
-	> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly
-
-	echo ""
+	# echo "対象ファイル,DIFFファイル名,行数（オリジナルA）,行数（ステップのみA）,行数（オリジナルB）,行数（ステップのみB）,追加行数（全量）,追加行数（ステップのみ）,削除行数（全量）,削除行数（ステップのみ）"
 	echo "${TARGET_FILE}" \
 	",${ESC_TARGET_FILE}"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only)"\
-	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly)"
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin          | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly        | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin          | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly        | wc -l)"\
+	# ",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff              | wc -l)"\
+	# ",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly     | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only     | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only     | wc -l)"\
+	",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly | wc -l)"
 
 	# 元居たDIRに戻る
 	cd ${CURRENTDIR}
