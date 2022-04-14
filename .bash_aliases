@@ -361,6 +361,94 @@ d.create_timestanmp_syboliclink() {
 	ln -s "${TARGET_FILE}" "${OUTPUT_DIR}/${FILETIMESTAMP_YYYYMMDD_HHMMSS}_${FILE_HASH}_${ZERO_PADED_INDEX}${TARGET_FILENAME_EXTENSION}"
 }
 
+# ----------------------------------------------------------------------------------
+# GITのブランチ比較結果をファイルに出力
+# 
+# Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
+# 標準出力に全体行、追加、削除の行数などの出力も行う。
+# ----------------------------------------------------------------------------------
+d.git.output_diff() {
+	if [ $# != 5 ]; then
+		echo "argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		return 1
+	fi
+	GIT_REPO_DIR="$1"
+	if [ ! -d ${GIT_REPO_DIR} ]; then
+		echo "[${GIT_REPO_DIR}] is not dir."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		return 1
+	fi
+	if [ ! -d ${GIT_REPO_DIR}/.git ]; then
+		echo "[${GIT_REPO_DIR}] is not git repository."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		return 1
+	fi
+	BRANCH_A="$2"
+	BRANCH_B="$3"
+	TARGET_FILE="$4"
+	DIFFOUTPUTDIR="$5"
+	if [ ! -d ${DIFFOUTPUTDIR} ]; then
+		echo "[${DIFFOUTPUTDIR}] is not dir."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		return 1
+	fi
+	# 現在のDIRを保持
+	local CURRENTDIR=$(pwd)
+	# 対象ファイルの/を_へ変更
+	ESC_TARGET_FILE="$(echo ${TARGET_FILE} | sed -e "s/\//_/g")"
+	
+	# GITリポジトリへ移動
+	cd ${GIT_REPO_DIR}
+	
+	# 修正していないファイルを出力する。
+	git show ${BRANCH_A}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin
+	git show ${BRANCH_B}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin
+
+	# コメント行を削除
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly
+
+	# ファイルをブランチ間でDIFFし、追加、削除した行のみ取り出す。
+	git diff ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} | egrep "^\+|^\-" | egrep -v "^[\+\-]{3}" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff
+
+	# 追加＋削除行のみ取り出す。
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only
+	cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02.diff | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only
+
+	# 追加行からコメント行を削除！
+	cat  ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only \
+	egrep -v "^\+$|^\+ +$|^\+[[:space:]]+$|^\+ *//|^\+[[:space:]]+//|^\+ */\*|^\+ *\*|import|^\+ *#.*|^\+ *--.*" \
+	> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly
+
+	# 削除行からコメント行を削除！
+	cat  ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only \
+	egrep -v "^\-$|^\- +$|^\-[[:space:]]+$|^\- *//|^\-[[:space:]]+//|^\- */\*|^\- *\*|import|^\- *#.*|^\- *--.*" \
+	> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly
+
+	echo ""
+	echo "${TARGET_FILE}" \
+	",${ESC_TARGET_FILE}"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only)"\
+	",$(wc -l ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly)"
+
+	# 元居たDIRに戻る
+	cd ${CURRENTDIR}
+}
+
 # ==================================================================================
 # URL
 # ==================================================================================
