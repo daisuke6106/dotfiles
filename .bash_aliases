@@ -449,6 +449,79 @@ function d.git.output_diff() {
 }
 
 # ==================================================================================
+# ファイルのあるディレクトリへのcd
+# ==================================================================================
+function cdf() {
+	cd $(dirname ${1})
+}
+
+# ==================================================================================
+# 改行コード変換
+# ==================================================================================
+function d.crlf_to_lf() {
+	if [ $# != 1 ]; then
+		echo "argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.crlf_to_lf FILEPATH"
+		return 1
+	fi
+	FILEPATH="$1"
+	tr -d '\r' < ${FILEPATH} > ${FILEPATH}.tmp
+	\cp ${FILEPATH}.tmp ${FILEPATH}
+	\rm ${FILEPATH}.tmp
+}
+
+# ============.======================================================================
+# MD5（出力を反転）
+# ==================================================================================
+function d.md5() {
+	if [ $# != 1 ]; then
+		echo "argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.md5 FILEPATH"
+		return 1
+	fi
+	FILEPATH="$1"
+	md5sum ${FILEPATH} | sed -e "s/^\(.*\) \*\(.*\)/\2 \1/g"
+}
+
+# ============.======================================================================
+# DIRを保持したままコピー
+# 引数１に指定したコピー対象ファイルパスを保持した状態で、引数２にコピーする
+# 例：「d.cp_with_path ./a/b/c/aaa.txt /x」の場合、
+#     /x/a/b/c/aaa.txtへコピー。「/x」にa/b/c/がなければ作る。
+# ==================================================================================
+function d.cp_with_path() {
+	if [ $# != 2 ]; then
+		echo "argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		return 1
+	fi
+	FROM_FILEPATH="$1"
+	TO_FILEPATH="$2"
+	if [ ! -f ${FROM_FILEPATH} ]; then
+		echo "[${FROM_FILEPATH}] is not file."
+		echo ""
+		echo "Usage:"
+		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		return 1
+	fi
+	if [ ! -d ${TO_FILEPATH} ]; then
+		echo "[${TO_FILEPATH}] is not dir."
+		echo ""
+		echo "Usage:"
+		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		return 1
+	fi
+	DIRPATH="$(dirname ${FROM_FILEPATH})"
+	mkdir -p ${TO_FILEPATH}/${DIRPATH} && cp -p ${FROM_FILEPATH} ${TO_FILEPATH}/${DIRPATH}
+}
+
+# ==================================================================================
 # URL
 # ==================================================================================
 # [シェル] カッコの意味と役割まとめ [Bash, Linux]
