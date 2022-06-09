@@ -30,12 +30,12 @@ function cdf() {
 # ==================================================================================
 # 改行コード変換
 # ==================================================================================
-function d.crlf_to_lf() {
+function d_crlf_to_lf() {
 	if [ $# != 1 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.crlf_to_lf FILEPATH"
+		echo "d_crlf_to_lf FILEPATH"
 		return 1
 	fi
 	FILEPATH="$1"
@@ -47,12 +47,12 @@ function d.crlf_to_lf() {
 # ============.======================================================================
 # MD5（出力を反転）
 # ==================================================================================
-function d.md5() {
+function d_md5() {
 	if [ $# != 1 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.md5 FILEPATH"
+		echo "d_md5 FILEPATH"
 		return 1
 	fi
 	FILEPATH="$1"
@@ -62,15 +62,15 @@ function d.md5() {
 # ============.======================================================================
 # DIRを保持したままコピー
 # 引数１に指定したコピー対象ファイルパスを保持した状態で、引数２にコピーする
-# 例：「d.cp_with_path ./a/b/c/aaa.txt /x」の場合、
+# 例：「d_cp_with_path ./a/b/c/aaa.txt /x」の場合、
 #     /x/a/b/c/aaa.txtへコピー。「/x」にa/b/c/がなければ作る。
 # ==================================================================================
-function d.cp_with_path() {
+function d_cp_with_path() {
 	if [ $# != 2 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	FROM_FILEPATH="$1"
@@ -79,14 +79,14 @@ function d.cp_with_path() {
 		echo "[${FROM_FILEPATH}] is not file."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	if [ ! -d ${TO_FILEPATH} ]; then
 		echo "[${TO_FILEPATH}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	DIRPATH="$(dirname ${FROM_FILEPATH})"
@@ -157,32 +157,32 @@ alias ${ALIAS_HEADER}.ssh.dev.vitualbox="ssh dev@dev.vitualbox"
 # ----------------------------------------------------------------------------------
 # 暗号化：標準入力を暗号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.enc="openssl rsautl -encrypt -pubin -inkey ${SSLKEY_PUB_NONPASS} | xxd -p | tr a-z A-Z | tr -d '\n'"
+alias ${ALIAS_HEADER}_enc="openssl rsautl -encrypt -pubin -inkey ${SSLKEY_PUB_NONPASS} | xxd -p | tr a-z A-Z | tr -d '\n'"
 # ----------------------------------------------------------------------------------
 # 復号化：標準入力を復号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.unenc="xxd -r -p | openssl rsautl -decrypt -inkey ${SSLKEY_PRV_NONPASS}"
+alias ${ALIAS_HEADER}_unenc="xxd -r -p | openssl rsautl -decrypt -inkey ${SSLKEY_PRV_NONPASS}"
 
 # ----------------------------------------------------------------------------------
 # password memo
 # ----------------------------------------------------------------------------------
-# alias dk.passwd.encrypt='openssl rsautl -encrypt -pubin -inkey ${GIT_REPO_DOTFILES}/.ssh/daisuke6106.rsa4096.key.pub -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd'
-alias ${ALIAS_HEADER}.passwd.encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
-alias ${ALIAS_HEADER}.passwd.unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc"
+# alias d_passwd_encrypt='openssl rsautl -encrypt -pubin -inkey ${GIT_REPO_DOTFILES}/.ssh/daisuke6106.rsa4096.key.pub -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd'
+alias ${ALIAS_HEADER}_passwd_encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
+alias ${ALIAS_HEADER}_passwd_unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc"
 
 # ----------------------------------------------------------------------------------
 # edit file
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.vi.vimrc="vi ${GIT_REPO_DOTFILES}/.vimrc"
-alias ${ALIAS_HEADER}.vi.bash_path="vi ${GIT_REPO_DOTFILES}/.bash_path"
-alias ${ALIAS_HEADER}.vi.bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
-alias ${ALIAS_HEADER}.vi.command="vi ${GIT_REPO_PRVFILES}/command"
+alias ${ALIAS_HEADER}_vi_vimrc="vi ${GIT_REPO_DOTFILES}/.vimrc"
+alias ${ALIAS_HEADER}_vi_bash_path="vi ${GIT_REPO_DOTFILES}/.bash_path"
+alias ${ALIAS_HEADER}_vi_bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias ${ALIAS_HEADER}_vi_command="vi ${GIT_REPO_PRVFILES}/command"
 
 # ----------------------------------------------------------------------------------
 # 削除付加フラグON/OFF系
 # ----------------------------------------------------------------------------------
-alias d.chi.on="sudo chattr +i -R "
-alias d.chi.off="sudo chattr -i -R "
+alias d_chi_on="sudo chattr +i -R "
+alias d_chi_off="sudo chattr -i -R "
 
 # ----------------------------------------------------------------------------------
 # vagrant
@@ -228,7 +228,7 @@ function d_filetype(){
 # ----------------------------------------------------------------------------------
 # 拡張子取得
 # ----------------------------------------------------------------------------------
-function d.extname(){
+function d_extname(){
 	if [ $# == 0 ]; then
 		echo "No arguments set." 1>&2
 		return 1
@@ -266,7 +266,7 @@ function d.extname(){
 # ----------------------------------------------------------------------------------
 # 日付パーサ
 # ----------------------------------------------------------------------------------
-function d.export.split_yyyymmddhhmmss {
+function d_export_split_yyyymmddhhmmss {
 	if [ $# != 1 ]; then
 		echo "only one argument can be specified." 1>&2
 		return 1
@@ -300,7 +300,7 @@ function d.export.split_yyyymmddhhmmss {
 # ----------------------------------------------------------------------------------
 # 画像メタデータ
 # ----------------------------------------------------------------------------------
-function d.echo.exif_datetime_yyyymmddhhmmss {
+function d_echo_exif_datetime_yyyymmddhhmmss {
 	if [ $# == 0 ]; then
 		echo "No arguments set." 1>&2
 		return 1
@@ -323,12 +323,12 @@ function d.echo.exif_datetime_yyyymmddhhmmss {
 # ----------------------------------------------------------------------------------
 # 画像メタデータ
 # ----------------------------------------------------------------------------------
-d.echo.filetimestanmp_yyyymmddhhmmss() {
+function d_echo_filetimestanmp_yyyymmddhhmmss() {
 	if [ $# != 1 ]; then
 		"argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.get_filetimestanmp_info TARGET_FILE"
+		echo "d_get_filetimestanmp_info TARGET_FILE"
 		return 1
 	fi
 	TARGET_FILE="$1"
@@ -336,7 +336,7 @@ d.echo.filetimestanmp_yyyymmddhhmmss() {
 		echo "[${TARGET_FILE}] is not file."
 		echo ""
 		echo "Usage:"
-		echo "d.get_filetimestanmp_info TARGET_FILE"
+		echo "d_get_filetimestanmp_info TARGET_FILE"
 		return 1
 	fi
 	echo $(ls -l --time-style=+'%Y%m%d%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
@@ -362,7 +362,7 @@ d.echo.filetimestanmp_yyyymmddhhmmss() {
 # git remote set-url origin git@github.com:daisuke6106/prvfiles.git
 
 FILES_DIR_LIST=("dotfiles" "etcfiles" "prvfiles")
-d.git.remote_set_url.xfiles() {
+function d_git_remote_set_url_xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
@@ -378,7 +378,7 @@ d.git.remote_set_url.xfiles() {
 	done
 }
 
-d.git.status.xfiles() {
+function d_git_status_xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
@@ -394,7 +394,7 @@ d.git.status.xfiles() {
 	done
 }
 
-d.git.pull.xfiles() {
+function d_git_pull_xfiles() {
 	for i in ${FILES_DIR_LIST[@]};
 	do
 		echo "# --------------------"
@@ -410,12 +410,12 @@ d.git.pull.xfiles() {
 	done
 }
 
-d.create_timestanmp_syboliclink() {
+function d_create_timestanmp_syboliclink() {
 	if [ $# != 2 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
+		echo "d_create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
 		return 1
 	fi
 	TARGET_FILE="$1"
@@ -423,7 +423,7 @@ d.create_timestanmp_syboliclink() {
 		echo "[${TARGET_FILE}] is not file."
 		echo ""
 		echo "Usage:"
-		echo "d.create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
+		echo "d_create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
 		return 1
 	fi
 	OUTPUT_DIR="$2"
@@ -431,13 +431,13 @@ d.create_timestanmp_syboliclink() {
 		echo "[${OUTPUT_DIR}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
+		echo "d_create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
 		return 1
 	fi
 	if "${ISERROR}"; then
 		echo ""
 		echo "Usage:"
-		echo "d.create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
+		echo "d_create_timestanmp_syboliclink SYMBOLICLINK_TARGETFILEPATH OUTPUT_DIR"
 		return 1
 	fi
 	FILETIMESTAMP_YYYYMMDD_HHMMSS=$(ls -l --time-style=+'%Y%m%d_%H%M%S' "${TARGET_FILE}" | awk '{print $6}')
@@ -466,12 +466,12 @@ d.create_timestanmp_syboliclink() {
 # Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
 # 標準出力に全体行、追加、削除の行数などの出力も行う。
 # ----------------------------------------------------------------------------------
-function d.git.output_diff_all() {
+function d_git_output_diff_all() {
 	if [ $# != 4 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		echo "d_git_output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
 		return 1
 	fi
 	GIT_REPO_DIR="$1"
@@ -479,14 +479,14 @@ function d.git.output_diff_all() {
 		echo "[${GIT_REPO_DIR}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		echo "d_git_output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
 		return 1
 	fi
 	if [ ! -d ${GIT_REPO_DIR}/.git ]; then
 		echo "[${GIT_REPO_DIR}] is not git repository."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		echo "d_git_output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
 		return 1
 	fi
 	BRANCH_A="$2"
@@ -496,7 +496,7 @@ function d.git.output_diff_all() {
 		echo "[${DIFFOUTPUTDIR}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		echo "d_git_output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
 		return 1
 	fi
 
@@ -517,7 +517,7 @@ function d.git.output_diff_all() {
 	# ※）RXXX系は左辺に入っているファイル名が入る
 	for TARGET_FILE in $(git diff --name-status ${BRANCH_A} ${BRANCH_B} | awk '{print $2}')
 	do
-		d.git.output_diff ${GIT_REPO_DIR} ${BRANCH_A} ${BRANCH_B} ${TARGET_FILE} ${DIFFOUTPUTDIR} | tee -a ${DIFFOUTPUTDIR}/${SUMMARYFILE}
+		d_git_output_diff ${GIT_REPO_DIR} ${BRANCH_A} ${BRANCH_B} ${TARGET_FILE} ${DIFFOUTPUTDIR} | tee -a ${DIFFOUTPUTDIR}/${SUMMARYFILE}
 	done
 }
 # ----------------------------------------------------------------------------------
@@ -526,12 +526,12 @@ function d.git.output_diff_all() {
 # Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
 # 標準出力に全体行、追加、削除の行数などの出力も行う。
 # ----------------------------------------------------------------------------------
-function d.git.output_diff() {
+function d_git_output_diff() {
 	if [ $# != 5 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		echo "d_git_output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
 		return 1
 	fi
 	GIT_REPO_DIR="$1"
@@ -539,14 +539,14 @@ function d.git.output_diff() {
 		echo "[${GIT_REPO_DIR}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		echo "d_git_output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
 		return 1
 	fi
 	if [ ! -d ${GIT_REPO_DIR}/.git ]; then
 		echo "[${GIT_REPO_DIR}] is not git repository."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		echo "d_git_output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
 		return 1
 	fi
 	BRANCH_A="$2"
@@ -557,7 +557,7 @@ function d.git.output_diff() {
 		echo "[${DIFFOUTPUTDIR}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.git.output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
+		echo "d_git_output_diff GIT_REPO_DIR BRANCH_A BRANCH_B TARGET_FILE DIFFOUTPUTDIR"
 		return 1
 	fi
 	# 現在のDIRを保持
@@ -601,7 +601,7 @@ function d.git.output_diff() {
 	fi
 	
 	# 拡張子を取得
-	local EXTENT=$(d.extname ${TARGET_FILE})
+	local EXTENT=$(d_extname ${TARGET_FILE})
 	
 	# テキストファイル or バイナリかを取得
 	# （判断するために一度showで取り出さざるを得ない・・・なんかいい手ないかな？）	
@@ -767,12 +767,12 @@ function cdf() {
 # ==================================================================================
 # 改行コード変換
 # ==================================================================================
-function d.crlf_to_lf() {
+function d_crlf_to_lf() {
 	if [ $# != 1 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.crlf_to_lf FILEPATH"
+		echo "d_crlf_to_lf FILEPATH"
 		return 1
 	fi
 	FILEPATH="$1"
@@ -784,12 +784,12 @@ function d.crlf_to_lf() {
 # ============.======================================================================
 # MD5（出力を反転）
 # ==================================================================================
-function d.md5() {
+function d_md5() {
 	if [ $# != 1 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.md5 FILEPATH"
+		echo "d_md5 FILEPATH"
 		return 1
 	fi
 	FILEPATH="$1"
@@ -799,15 +799,15 @@ function d.md5() {
 # ============.======================================================================
 # DIRを保持したままコピー
 # 引数１に指定したコピー対象ファイルパスを保持した状態で、引数２にコピーする
-# 例：「d.cp_with_path ./a/b/c/aaa.txt /x」の場合、
+# 例：「d_cp_with_path ./a/b/c/aaa.txt /x」の場合、
 #     /x/a/b/c/aaa.txtへコピー。「/x」にa/b/c/がなければ作る。
 # ==================================================================================
-function d.cp_with_path() {
+function d_cp_with_path() {
 	if [ $# != 2 ]; then
 		echo "argument fail."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	FROM_FILEPATH="$1"
@@ -816,14 +816,14 @@ function d.cp_with_path() {
 		echo "[${FROM_FILEPATH}] is not file."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	if [ ! -d ${TO_FILEPATH} ]; then
 		echo "[${TO_FILEPATH}] is not dir."
 		echo ""
 		echo "Usage:"
-		echo "d.cp_with_path FROM_FILEPATH TO_FILEPATH"
+		echo "d_cp_with_path FROM_FILEPATH TO_FILEPATH"
 		return 1
 	fi
 	DIRPATH="$(dirname ${FROM_FILEPATH})"
