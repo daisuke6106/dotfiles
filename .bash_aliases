@@ -138,11 +138,11 @@ function d_filetype(){
 	fi
 	local FILEPATH="$1"
 	if [ ! -e $FILEPATH ]; then
-		echo "Not exists. path=[$i]" 1>&2
+		echo "Not exists. path=[$FILEPATH]" 1>&2
 		return 1
 	fi
 	if [ ! -f $FILEPATH ]; then
-	 	echo "Not such file. path=[$i]" 1>&2
+	 	echo "Not such file. path=[$FILEPATH]" 1>&2
 	 	return 1
 	fi
 	if [ $(file --mime "$FILEPATH" | grep "charset=binary" | wc -l) == 1 ]; then
@@ -393,6 +393,62 @@ d.create_timestanmp_syboliclink() {
 # Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
 # 標準出力に全体行、追加、削除の行数などの出力も行う。
 # ----------------------------------------------------------------------------------
+function d.git.output_diff_all() {
+	if [ $# != 4 ]; then
+		echo "argument fail."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		return 1
+	fi
+	GIT_REPO_DIR="$1"
+	if [ ! -d ${GIT_REPO_DIR} ]; then
+		echo "[${GIT_REPO_DIR}] is not dir."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		return 1
+	fi
+	if [ ! -d ${GIT_REPO_DIR}/.git ]; then
+		echo "[${GIT_REPO_DIR}] is not git repository."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		return 1
+	fi
+	BRANCH_A="$2"
+	BRANCH_B="$3"
+	DIFFOUTPUTDIR="$4"
+	if [ ! -d ${DIFFOUTPUTDIR} ]; then
+		echo "[${DIFFOUTPUTDIR}] is not dir."
+		echo ""
+		echo "Usage:"
+		echo "d.git.output_diff_all GIT_REPO_DIR BRANCH_A BRANCH_B DIFFOUTPUTDIR"
+		return 1
+	fi
+
+	# 現在のDIRを保持
+	local CURRENTDIR=$(pwd)
+	
+	# GITリポジトリへ移動
+	cd ${GIT_REPO_DIR}
+
+	# ヘッダを出力
+	echo "対象ファイル,DIFFファイル名,text/binary,拡張子,ステータス,行数（オリジナルA）,行数（ステップのみA）,行数（オリジナルB）,行数（ステップのみB）,追加行数（全量）,追加行数（ステップのみ）,削除行数（全量）,削除行数（ステップのみ）"
+	
+	# 差分抽出開始
+	# RXXX系は左辺に入っているファイル名が入る
+	for TARGET_FILE in $(git diff --name-status ${BRANCH_A} ${BRANCH_B} | awk '{print $2}')
+	do
+		d.git.output_diff ${GIT_REPO_DIR} ${BRANCH_A} ${BRANCH_B} ${TARGET_FILE} ${DIFFOUTPUTDIR}
+	done
+}
+# ----------------------------------------------------------------------------------
+# GITのブランチ比較結果をファイルに出力
+# 
+# Gitの対象のブランチＡ、Ｂを比較して、追加／削除された行を抽出しファイルに出力（コメント行などはある程度は削除する）
+# 標準出力に全体行、追加、削除の行数などの出力も行う。
+# ----------------------------------------------------------------------------------
 function d.git.output_diff() {
 	if [ $# != 5 ]; then
 		echo "argument fail."
@@ -436,19 +492,52 @@ function d.git.output_diff() {
 	cd ${GIT_REPO_DIR}
 	
 	git diff --name-status ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} > /dev/null 2>&1
-	if [ $? != 0 ]; then
-		echo "error. path=[$TARGET_FILE]" 1>&2
-		return 1
+	
+	# このコマンドが正常終了した場合は、RENAMEか変更
+	if [ $? == 0 ]; then
+		# 追加、変更、削除の分類
+		STATUS=$(git diff --name-status ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} 2>/dev/null | sed -e "s/^\(.\).*/\1/g")
+
+	# 異常終了した場合、新規ファイル、もしくは削除されたファイルのどちらかである
+	else
+		git show ${BRANCH_A}:${TARGET_FILE} > /dev/null 2>&1
+		local STATUS_A=$?
+		git show ${BRANCH_B}:${TARGET_FILE} > /dev/null 2>&1
+		local STATUS_B=$?
+		# Aのブランチにあり、Bのブランチにない場合は削除されたファイル
+		if [ ${STATUS_A} == 0 -a ${STATUS_B} != 0 ]; then
+			STATUS="D"
+		# Aのブランチにない、Bのブランチにある場合は新規作成されたファイル
+		elif [ ${STATUS_A} != 0 -a ${STATUS_B} == 0 ]; then
+			STATUS="A"
+		else
+			echo "error.unknow status. file:${TARGET_FILE}" 1>&2
+			return 1
+		fi
+
 	fi
 	
-	# 追加、変更、削除の分類
-	STATUS=$(git diff --name-status ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} 2>/dev/null | sed -e "s/^\(.\).*/\1/g")
-
 	# 拡張子を取得
 	local EXTENT=$(d.extname ${TARGET_FILE})
-
+	
 	# テキストファイル or バイナリかを取得
-	local FILETYPE=$(d_filetype ${TARGET_FILE})
+	# （判断するために一度showで取り出さざるを得ない・・・なんかいい手ないかな？）	
+	case "${STATUS}" in
+		[A] )
+			git show ${BRANCH_B}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/file.tmp
+			;;
+		[M] )
+			git show ${BRANCH_B}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/file.tmp
+			;;
+		[D] )
+			git show ${BRANCH_A}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/file.tmp
+			;;
+		* )
+			git show ${BRANCH_A}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/file.tmp
+			;;
+	esac
+	local FILETYPE=$(d_filetype ${DIFFOUTPUTDIR}/file.tmp)
+	\rm -f ${DIFFOUTPUTDIR}/file.tmp
 
 	case "${STATUS}" in 
 
@@ -475,61 +564,79 @@ function d.git.output_diff() {
 	# リネーム以外の場合
 	# ----------------------------------------------------------------------------------------------------
 	[AMDCU] )
-		# ----------------------------------------------------------------------------------------------------
-		# 01.全量
-		# ----------------------------------------------------------------------------------------------------
-		# 修正していないファイルを出力する。
-		git show ${BRANCH_A}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin 2>/dev/null
-		git show ${BRANCH_B}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin 2>/dev/null
-		# ステップ行のみ抽出
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly
-		# コメント行のみ抽出
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin | egrep    "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_03.a_commentonly
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep    "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_03.b_commentonly
+		# テキストファイルは差分を出力
+		if [ "${FILETYPE}" == "text" ]; then
+			# ----------------------------------------------------------------------------------------------------
+			# 01.全量
+			# ----------------------------------------------------------------------------------------------------
+			# 修正していないファイルを出力する。
+			git show ${BRANCH_A}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin 2>/dev/null
+			git show ${BRANCH_B}:${TARGET_FILE} > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin 2>/dev/null
+			# ステップ行のみ抽出
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep -v "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly
+			# コメント行のみ抽出
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin | egrep    "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_03.a_commentonly
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin | egrep    "^$|^ +$|^[[:space:]]+$|^ *//|^[[:space:]]+//|^ */\*|^ *\*|^import|^ *#.*|^ *--.*" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_03.b_commentonly
 
-		# ----------------------------------------------------------------------------------------------------
-		# 02.ブランチ間差分
-		# ----------------------------------------------------------------------------------------------------
-		# ファイルをブランチ間でDIFFし、追加、削除した行のみ取り出す。
-		git diff ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} | egrep "^\+|^\-" | egrep -v "^[\+\-]{3}" 1> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff
-		
-		# ステップ行のみ抽出
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | \
-		egrep -v "^\+$|^\+ +$|^\+[[:space:]]+$|^\+ *//|^\+[[:space:]]+//|^\+ */\*|^\+ *\*|import|^\+ *#.*|^\+ *--.*" | \
-		egrep -v "^\-$|^\- +$|^\-[[:space:]]+$|^\- *//|^\-[[:space:]]+//|^\- */\*|^\- *\*|import|^\- *#.*|^\- *--.*"   \
-		> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly
-		
-		# コメント行のみ抽出
-		diff ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | \
-		egrep "^<" | sed -e "s/^< //g" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_03.commentonly
+			# ----------------------------------------------------------------------------------------------------
+			# 02.ブランチ間差分
+			# ----------------------------------------------------------------------------------------------------
+			# ファイルをブランチ間でDIFFし、追加、削除した行のみ取り出す。
+			git diff ${BRANCH_A}:${TARGET_FILE} ${BRANCH_B}:${TARGET_FILE} 2>/dev/null | egrep "^\+|^\-" | egrep -v "^[\+\-]{3}" 1> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff
+			
+			# ステップ行のみ抽出
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | \
+			egrep -v "^\+$|^\+ +$|^\+[[:space:]]+$|^\+ *//|^\+[[:space:]]+//|^\+ */\*|^\+ *\*|import|^\+ *#.*|^\+ *--.*" | \
+			egrep -v "^\-$|^\- +$|^\-[[:space:]]+$|^\- *//|^\-[[:space:]]+//|^\- */\*|^\- *\*|import|^\- *#.*|^\- *--.*"   \
+			> ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly
+			
+			# コメント行のみ抽出
+			diff ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | \
+			egrep "^<" | sed -e "s/^< //g" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_03.commentonly
 
-		# ----------------------------------------------------------------------------------------------------
-		# 03.追加／削除行
-		# ----------------------------------------------------------------------------------------------------
-		# 追加＋削除行のみ取り出す。
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly
-		cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly
+			# ----------------------------------------------------------------------------------------------------
+			# 03.追加／削除行
+			# ----------------------------------------------------------------------------------------------------
+			# 追加＋削除行のみ取り出す。
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_01.diff | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\+" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly
+			cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.02_02.diff_steponly | egrep "^\-" > ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly
 
-		# ----------------------------------------------------------------------------------------------------
-		# 04.集計結果を出力
-		# ----------------------------------------------------------------------------------------------------
-		# echo "対象ファイル,DIFFファイル名,text/binary,拡張子,ステータス,行数（オリジナルA）,行数（ステップのみA）,行数（オリジナルB）,行数（ステップのみB）,追加行数（全量）,追加行数（ステップのみ）,削除行数（全量）,削除行数（ステップのみ）"
-		echo "${TARGET_FILE}" \
-		",${ESC_TARGET_FILE}"\
-		",${FILETYPE}"\
-		",${EXTENT}"\
-		",${STATUS}"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin          | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly        | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin          | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly        | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only     | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only     | wc -l)"\
-		",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly | wc -l)"
+			# ----------------------------------------------------------------------------------------------------
+			# 04.集計結果を出力
+			# ----------------------------------------------------------------------------------------------------
+			# echo "対象ファイル,DIFFファイル名,text/binary,拡張子,ステータス,行数（オリジナルA）,行数（ステップのみA）,行数（オリジナルB）,行数（ステップのみB）,追加行数（全量）,追加行数（ステップのみ）,削除行数（全量）,削除行数（ステップのみ）"
+			echo "${TARGET_FILE}" \
+			",${ESC_TARGET_FILE}"\
+			",${FILETYPE}"\
+			",${EXTENT}"\
+			",${STATUS}"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.a_origin          | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.a_steponly        | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_01.b_origin          | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.01_02.b_steponly        | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_01.diff_add_only     | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.03_02.diff_add_steponly | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_01.diff_del_only     | wc -l)"\
+			",$(cat ${DIFFOUTPUTDIR}/${ESC_TARGET_FILE}.04_02.diff_del_steponly | wc -l)"
+		# バイナリファイル
+		else
+			echo "${TARGET_FILE}" \
+			",${ESC_TARGET_FILE}"\
+			",${FILETYPE}"\
+			",${EXTENT}"\
+			",${STATUS}"\
+			",0"\
+			",0"\
+			",0"\
+			",0"\
+			",0"\
+			",0"\
+			",0"\
+			",0"
+		fi
 	;;
 	*)
 		echo "unknown status=[${STATUS}]"
