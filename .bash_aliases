@@ -21,45 +21,6 @@ alias vi='vim'
 alias v='vim'
 
 # ==================================================================================
-# ファイルのあるディレクトリへのcd
-# ==================================================================================
-function cdf() {
-	cd $(dirname ${1})
-}
-
-# ==================================================================================
-# 改行コード変換
-# ==================================================================================
-function d_crlf_to_lf() {
-	if [ $# != 1 ]; then
-		echo "argument fail."
-		echo ""
-		echo "Usage:"
-		echo "d_crlf_to_lf FILEPATH"
-		return 1
-	fi
-	FILEPATH="$1"
-	tr -d '\r' < ${FILEPATH} > ${FILEPATH}.tmp
-	\cp ${FILEPATH}.tmp ${FILEPATH}
-	\rm ${FILEPATH}.tmp
-}
-
-# ============.======================================================================
-# MD5（出力を反転）
-# ==================================================================================
-function d_md5() {
-	if [ $# != 1 ]; then
-		echo "argument fail."
-		echo ""
-		echo "Usage:"
-		echo "d_md5 FILEPATH"
-		return 1
-	fi
-	FILEPATH="$1"
-	md5sum ${FILEPATH} | sed -e "s/^\(.*\) \*\(.*\)/\2 \1/g"
-}
-
-# ============.======================================================================
 # DIRを保持したままコピー
 # 引数１に指定したコピー対象ファイルパスを保持した状態で、引数２にコピーする
 # 例：「d_cp_with_path ./a/b/c/aaa.txt /x」の場合、
@@ -137,7 +98,7 @@ ALIAS_HEADER="d"
 # ----------------------------------------------------------------------------------
 # ssh
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}.ssh.dev.vitualbox="ssh dev@dev.vitualbox"
+alias d_ssh.dev.vitualbox="ssh dev@dev.vitualbox"
 
 # ----------------------------------------------------------------------------------
 # パスフレーズを使って暗号化/復号化
@@ -145,11 +106,11 @@ alias ${ALIAS_HEADER}.ssh.dev.vitualbox="ssh dev@dev.vitualbox"
 # ----------------------------------------------------------------------------------
 # 暗号化：標準入力を暗号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-# alias ${ALIAS_HEADER}.enc="openssl enc -e -aes-256-cbc -salt -k ${PASSWORD} 2>/dev/null | xxd -p | tr a-f A-F | tr -d "\n""
+# alias d_enc="openssl enc -e -aes-256-cbc -salt -k ${PASSWORD} 2>/dev/null | xxd -p | tr a-f A-F | tr -d "\n""
 # ----------------------------------------------------------------------------------
 # 復号化：標準入力を復号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-# alias ${ALIAS_HEADER}.unenc="xxd -r -p | openssl enc -d -aes-256-cbc -salt -k ${PASSWORD} 2>/dev/null"
+# alias d_unenc="xxd -r -p | openssl enc -d -aes-256-cbc -salt -k ${PASSWORD} 2>/dev/null"
 
 # ----------------------------------------------------------------------------------
 # 鍵ファイルを使って暗号化/復号化
@@ -157,26 +118,26 @@ alias ${ALIAS_HEADER}.ssh.dev.vitualbox="ssh dev@dev.vitualbox"
 # ----------------------------------------------------------------------------------
 # 暗号化：標準入力を暗号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}_enc="openssl rsautl -encrypt -pubin -inkey ${SSLKEY_PUB_NONPASS} | xxd -p | tr a-z A-Z | tr -d '\n'"
+alias d_enc="openssl rsautl -encrypt -pubin -inkey ${SSLKEY_PUB_NONPASS} | xxd -p | tr a-z A-Z | tr -d '\n'"
 # ----------------------------------------------------------------------------------
 # 復号化：標準入力を復号化して標準出力に出力
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}_unenc="xxd -r -p | openssl rsautl -decrypt -inkey ${SSLKEY_PRV_NONPASS}"
+alias d_unenc="xxd -r -p | openssl rsautl -decrypt -inkey ${SSLKEY_PRV_NONPASS}"
 
 # ----------------------------------------------------------------------------------
 # password memo
 # ----------------------------------------------------------------------------------
 # alias d_passwd_encrypt='openssl rsautl -encrypt -pubin -inkey ${GIT_REPO_DOTFILES}/.ssh/daisuke6106.rsa4096.key.pub -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd'
-alias ${ALIAS_HEADER}_passwd_encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
-alias ${ALIAS_HEADER}_passwd_unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc"
+alias d_passwd_encrypt="openssl enc -e -aes256 -in ${GIT_REPO_PRVFILES}/passwd.nonenc -out ${GIT_REPO_PRVFILES}/passwd"
+alias d_passwd_unencrypt="openssl enc -d -aes256 -in ${GIT_REPO_PRVFILES}/passwd -out ${GIT_REPO_PRVFILES}/passwd.nonenc"
 
 # ----------------------------------------------------------------------------------
 # edit file
 # ----------------------------------------------------------------------------------
-alias ${ALIAS_HEADER}_vi_vimrc="vi ${GIT_REPO_DOTFILES}/.vimrc"
-alias ${ALIAS_HEADER}_vi_bash_path="vi ${GIT_REPO_DOTFILES}/.bash_path"
-alias ${ALIAS_HEADER}_vi_bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
-alias ${ALIAS_HEADER}_vi_command="vi ${GIT_REPO_PRVFILES}/command"
+alias d_vi_vimrc="vi ${GIT_REPO_DOTFILES}/.vimrc"
+alias d_vi_bash_path="vi ${GIT_REPO_DOTFILES}/.bash_path"
+alias d_vi_bash_aliases="vi ${GIT_REPO_DOTFILES}/.bash_aliases"
+alias d_vi_command="vi ${GIT_REPO_PRVFILES}/command"
 
 # ----------------------------------------------------------------------------------
 # 削除付加フラグON/OFF系
@@ -594,7 +555,7 @@ function d_git_output_diff() {
 		elif [ ${STATUS_A} != 0 -a ${STATUS_B} == 0 ]; then
 			STATUS="A"
 		else
-			echo "error.unknow status. file:${TARGET_FILE}" 1>&2
+			echo "error.unknow status. status=[${STATUS}] target_file:${TARGET_FILE}" 1>&2
 			return 1
 		fi
 
@@ -750,7 +711,8 @@ function d_git_output_diff() {
 		fi
 	;;
 	*)
-		echo "unknown status=[${STATUS}]"
+		echo "unknown status. status=[${STATUS}] target_file=[${TARGET_FILE}]" 2>&1
+		return 1
 		;;
 	esac
 	# 元居たDIRに戻る
@@ -767,7 +729,7 @@ function cdf() {
 # ==================================================================================
 # 改行コード変換
 # ==================================================================================
-function d_crlf_to_lf() {
+function d_linebreak_to_lf() {
 	if [ $# != 1 ]; then
 		echo "argument fail."
 		echo ""
@@ -776,12 +738,13 @@ function d_crlf_to_lf() {
 		return 1
 	fi
 	FILEPATH="$1"
-	tr -d '\r' < ${FILEPATH} > ${FILEPATH}.tmp
-	\cp ${FILEPATH}.tmp ${FILEPATH}
-	\rm ${FILEPATH}.tmp
+	# tr -d '\r' < ${FILEPATH} > ${FILEPATH}.tmp
+	# \cp ${FILEPATH}.tmp ${FILEPATH}
+	# \rm ${FILEPATH}.tmp
+	perl -i -e "s/\r//g" ${FILEPATH}
 }
 
-# ============.======================================================================
+# ==================================================================================
 # MD5（出力を反転）
 # ==================================================================================
 function d_md5() {
@@ -796,7 +759,7 @@ function d_md5() {
 	md5sum ${FILEPATH} | sed -e "s/^\(.*\) \*\(.*\)/\2 \1/g"
 }
 
-# ============.======================================================================
+# ==================================================================================
 # DIRを保持したままコピー
 # 引数１に指定したコピー対象ファイルパスを保持した状態で、引数２にコピーする
 # 例：「d_cp_with_path ./a/b/c/aaa.txt /x」の場合、
