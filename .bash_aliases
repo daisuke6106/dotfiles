@@ -286,7 +286,7 @@ function d_echo_exif_datetime_yyyymmddhhmmss {
 # ----------------------------------------------------------------------------------
 function d_echo_filetimestanmp_yyyymmddhhmmss() {
 	if [ $# != 1 ]; then
-		"argument fail."
+		echo "argument fail."
 		echo ""
 		echo "Usage:"
 		echo "d_get_filetimestanmp_info TARGET_FILE"

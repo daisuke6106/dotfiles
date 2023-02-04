@@ -48,4 +48,10 @@ export PATH=${PYCHARM_HOME}:${PATH}
 # Prawler
 export PATH=${PRAWLER_HOME}:${PATH}
 
-
+# =======================================================================
+# その他
+# =======================================================================
+# Windows10 - Git Bashでシンボリックリンクをつくれるようにする
+# https://blog.logicky.com/2017/06/07/windows10-git-bash%E3%81%A7%E3%82%B7%E3%83%B3%E3%83%9C%E3%83%AA%E3%83%83%E3%82%AF%E3%83%AA%E3%83%B3%E3%82%AF%E3%82%92%E3%81%A4%E3%81%8F%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%99%E3%82%8B/
+# （管理者権限で実行しないとできない）
+export MSYS=winsymlinks:nativestrict
