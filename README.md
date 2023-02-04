@@ -63,7 +63,20 @@
 
 ## VSCode設定ファイルの設定
 
+    # ----------------------------------------------------------------------------------------------------
+    # Ubuntuの場合
+    # ----------------------------------------------------------------------------------------------------
+
+    # 現存ファイルをバックアップ
+    mv ~/.config/Code/User/settings.json ~/.config/Code/User/settings.json.org
+
+    # 設定ファイルをシンボリックリンクで作成
+    mkdir -p ~/.config/Code/User/
+    ln -s $(pwd)/.vscode/settings.json ~/.config/Code/User/settings.json
+
+    # ----------------------------------------------------------------------------------------------------
     # Windowsの場合
+    # ----------------------------------------------------------------------------------------------------
     #（ 管理者権限で実行したgitbashでたたくこと）
 
     # シンボリックリンクを作れるように設定
@@ -74,6 +87,9 @@
 
     # 設定ファイルをシンボリックリンクで作成
     ln -s $(pwd)/.vscode/settings.json /c/Users/daisuke6106/AppData/Roaming/Code/User/settings.json
+
+
+
 
 ## クローン済のリポジトリがpull,pushできなかった場合
 git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
