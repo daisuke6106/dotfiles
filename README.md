@@ -75,6 +75,17 @@
     ln -s $(pwd)/.vscode/settings.json ~/.config/Code/User/settings.json
 
     # ----------------------------------------------------------------------------------------------------
+    # Macの場合
+    # ----------------------------------------------------------------------------------------------------
+
+    # 現存ファイルをバックアップ
+    mv "$HOME/Library/Application Support/Code/User/settings.json" "$HOME/Library/Application Support/Code/User/settings.json.org"
+
+    # 設定ファイルをシンボリックリンクで作成
+    mkdir -p "$HOME/Library/Application Support/Code/User/"
+    ln -s $(pwd)/.vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+
+    # ----------------------------------------------------------------------------------------------------
     # Windowsの場合
     # ----------------------------------------------------------------------------------------------------
     #（ 管理者権限で実行したgitbashでたたくこと）
