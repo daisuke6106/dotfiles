@@ -52,6 +52,14 @@ nnoremap ｌ l
 " nnoremap j gj
 " nnoremap k gk
 
+" 文字、行の削除はレジスタに入れない
+nnoremap c "_c
+nnoremap d "_d
+nnoremap x "_x
+xnoremap c "_c
+xnoremap d "_d
+xnoremap x "_x
+
 " ==================================================
 " 保存関連
 " ==================================================
@@ -104,6 +112,12 @@ set nowrap
 set virtualedit=block
 
 " ==================================================
+" ウィンドウ関連
+" ==================================================
+nnoremap <C-k> vsplit
+nnoremap <C-j> split
+
+" ==================================================
 " タブ関連
 " ==================================================
 " 不可視文字を可視化(タブが「^   」と表示される)
@@ -130,7 +144,6 @@ set wrapscan
 set hlsearch
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
-
 
 "対応する括弧に移動
 nnoremap [ %
