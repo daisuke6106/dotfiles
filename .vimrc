@@ -103,7 +103,7 @@ set wildmode=list:longest
 set ruler
 autocmd Colorscheme * highlight FullWidthSpace ctermbg=white
 autocmd VimEnter * match FullWidthSpace /　/
-colorscheme desert
+colorscheme deser
 " ステータスバーに文字コード、改行コードを表示
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 " 自動改行させない
@@ -114,8 +114,18 @@ set virtualedit=block
 " ==================================================
 " ウィンドウ関連
 " ==================================================
-nnoremap <C-k> vsplit
-nnoremap <C-j> split
+nnoremap <C-k> <C-w>v
+nnoremap <C-j> <C-w>s
+
+" ==================================================
+" タブバー関連
+" ==================================================
+" タブバーを非表示
+" set showtabline=0
+" 2個以上のタブがあるときのみタブバーを表示する
+" set showtabline=1
+" タブバーを表示する（常時）
+set showtabline=2
 
 " ==================================================
 " タブ関連
