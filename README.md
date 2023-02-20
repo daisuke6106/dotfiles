@@ -9,10 +9,23 @@
     # ファイルをシンボリックリンクで差し替え
     ln -s `pwd`/.vimrc ~/.vimrc
 
+    # ----------------------------------------------------------------------------------------------------
+    # Windowsの場合
+    # ----------------------------------------------------------------------------------------------------
+    #（ 管理者権限で実行したgitbashでたたくこと）
+
+    # シンボリックリンクを作れるように設定
+    export MSYS=winsymlinks:nativestrict
+    
+    # 現存ファイルをバックアップ
+    mv /c/Users/daisuke6106/.vimrc /c/Users/daisuke6106/.vimrc.org
+
+    # 設定ファイルをシンボリックリンクで作成
+    ln -s $(pwd)/.vimrc /c/Users/daisuke6106/.vimrc
+
 ## path設定ファイルの適用
 
-    # 現存ファイルのバックアップ
-    mv ~/.bash_path ~/.bash_path.org
+    # 現存ファイルのバックアップ mv ~/.bash_path ~/.bash_path.org
     # ファイルをシンボリックリンクで差し替え
     ln -s `pwd`/.bash_path ~/.bash_path
 

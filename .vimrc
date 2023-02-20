@@ -7,6 +7,8 @@ set fenc=utf-8
 set showcmd
 " １００文字区切りの印
 set colorcolumn=100
+" 履歴保存数
+set history=1000
 
 
 " ==================================================
@@ -60,6 +62,13 @@ xnoremap c "_c
 xnoremap d "_d
 xnoremap x "_x
 
+" スペース挿入時用の枠入力
+xnoremap is :s/\t/                              /g
+
+" ビジュアルモードで選択中の範囲からスペースを除去
+xnoremap ds :s/\%V *//
+
+
 " ==================================================
 " 保存関連
 " ==================================================
@@ -102,20 +111,21 @@ set wildmode=list:longest
 " カーソルの位置表示を行う
 set ruler
 autocmd Colorscheme * highlight FullWidthSpace ctermbg=white
-autocmd VimEnter * match FullWidthSpace /　/
-colorscheme deser
+" autocmd VimEnter * match FullWidthSpace /　/
+" colorscheme deser
+
 " ステータスバーに文字コード、改行コードを表示
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 " 自動改行させない
 set nowrap
 " vim の矩形選択で文字が無くても右へ進める
-set virtualedit=block
+set virtualedit+=block
 
 " ==================================================
 " ウィンドウ関連
 " ==================================================
-nnoremap <C-k> <C-w>v
-nnoremap <C-j> <C-w>s
+" nnoremap <C-k> <C-w>v
+" nnoremap <C-j> <C-w>s
 
 " ==================================================
 " タブバー関連
@@ -131,7 +141,7 @@ set showtabline=2
 " タブ関連
 " ==================================================
 " 不可視文字を可視化(タブが「^   」と表示される)
-set list listchars=tab:»-,eol:↲
+" set list listchars=tab:»-,eol:↲
 " Tab文字を半角スペースにする
 " set expandtab
 " 行頭以外のTab文字の表示幅（スペースいくつ分）
