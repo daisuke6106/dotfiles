@@ -14,4 +14,5 @@
     // "vim.vimrc.path": "/Users/dk/github_workspace/dotfiles/.vimrc",
     // windows用
     "vim.vimrc.path": "c:\\Users\\daisuke6106\\github_workspace\\dotfiles\\.vimrc",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
 }
