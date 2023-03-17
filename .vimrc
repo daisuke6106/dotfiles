@@ -55,12 +55,12 @@ nnoremap ｌ l
 " nnoremap k gk
 
 " 文字、行の削除はレジスタに入れない
-nnoremap c "_c
-nnoremap d "_d
-nnoremap x "_x
-xnoremap c "_c
-xnoremap d "_d
-xnoremap x "_x
+" nnoremap c "_c
+" nnoremap d "_d
+" nnoremap x "_x
+" xnoremap c "_c
+" xnoremap d "_d
+" xnoremap x "_x
 
 " スペース挿入時用の枠入力
 xnoremap is :s/\t/                              /g
@@ -143,11 +143,11 @@ set showtabline=2
 " 不可視文字を可視化(タブが「^   」と表示される)
 " set list listchars=tab:»-,eol:↲
 " Tab文字を半角スペースにする
-" set expandtab
+set expandtab
 " 行頭以外のTab文字の表示幅（スペースいくつ分）
-" set tabstop=2
+set tabstop=4
 " 行頭でのTab文字の表示幅
-" set shiftwidth=2
+set shiftwidth=4
 
 " ==================================================
 " 検索関連
@@ -166,8 +166,8 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 "対応する括弧に移動
-nnoremap [ %
-nnoremap ] %
+" nnoremap [ %
+" nnoremap ] %
 
 " ====================================================================================================
 " ターミナル関連
