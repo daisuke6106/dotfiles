@@ -141,7 +141,7 @@ set showtabline=2
 " タブ関連
 " ====================================================================================================
 " 不可視文字を可視化(タブが「^   」と表示される)
-" set list listchars=tab:»-,eol:↲
+set list listchars=tab:»-,eol:↲
 " Tab文字を半角スペースにする
 set expandtab
 " 行頭以外のTab文字の表示幅（スペースいくつ分）
@@ -178,11 +178,17 @@ vnoremap <C-CR> :!bash<CR>
 nnoremap <C-CR> V:!bash<CR>
 
 " ====================================================================================================
-" command11関連
+" command関連
 " ====================================================================================================
 " どこを修正したのか確認
 nnoremap diff :w !diff % -
 
 
-
+" ====================================================================================================
+" テンプレート関連
+" ====================================================================================================
+autocmd BufNewFile *.sql 0r $HOME/.vim/template/plsql.sql
+autocmd BufNewFile *.md 0r $HOME/.vim/template/markdown.md
+autocmd BufNewFile *.uml 0r $HOME/.vim/template/plantuml.txt
+autocmd BufNewFile *.sh 0r $HOME/.vim/template/shellscript.sh
 

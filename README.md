@@ -17,11 +17,17 @@
     # シンボリックリンクを作れるように設定
     export MSYS=winsymlinks:nativestrict
     
-    # 現存ファイルをバックアップ
+    # .vimrc現存ファイルをバックアップ
     mv /c/Users/daisuke6106/.vimrc /c/Users/daisuke6106/.vimrc.org
 
-    # 設定ファイルをシンボリックリンクで作成
+    # .vimrc設定ファイルをシンボリックリンクで作成
     ln -s $(pwd)/.vimrc /c/Users/daisuke6106/.vimrc
+
+    # .vim現存フォルダをバックアップ
+    mv /c/Users/daisuke6106/.vim /c/Users/daisuke6106/.vim.org
+
+    # .vim設定フォルダをシンボリックリンクで作成
+    ln -s $(pwd)/.vim /c/Users/daisuke6106/.vim
 
 ## path設定ファイルの適用
 
