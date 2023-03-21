@@ -23,9 +23,9 @@ DECLARE
     BEGIN
         BEGIN
             SELECT
-                    '"' || 'A' || '"'
-                ||  '"' || 'B' || '"'
-                ||  '"' || 'C' || '"'
+                     '"' || NVL(        'A'                           ,'<NULL>') || '"'
+                ||  ',"' || NVL(TO_CHAR('B', 'FM9999999999'          ),'<NULL>') || '"'
+                ||  ',"' || NVL(TO_CHAR('C', 'YYYY/MM/DD/ HH24;MI:SS'),'<NULL>') || '"'
             INTO RESULT_STR 
             FROM DUAL;
         EXCEPTION
@@ -55,4 +55,5 @@ END;
 /
 
 EXIT;
+
 
