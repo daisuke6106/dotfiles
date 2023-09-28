@@ -792,6 +792,17 @@ function d_cp_with_path() {
 	DIRPATH="$(dirname ${FROM_FILEPATH})"
 	mkdir -p ${TO_FILEPATH}/${DIRPATH} && cp -p ${FROM_FILEPATH} ${TO_FILEPATH}/${DIRPATH}
 }
+# ==================================================================================
+# グローバルIPアドレスを取得
+# ==================================================================================
+function d_get_grobal_ipaddress() {
+    IPADDRESS_GLOBAL=$(curl -s inet-ip.info)
+    if [ $(echo $?) != 0 ]; then
+        echo "Failed to obtain global IP address.";
+        exit 1;
+    fi
+    echo ${IPADDRESS_GLOBAL}
+}
 
 # ==================================================================================
 # URL
