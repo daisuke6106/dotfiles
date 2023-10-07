@@ -13,6 +13,9 @@ set history=1000
 syntax on
 " 改行表示をON
 set list
+" <C-a>,C-x>押下時のインクリメント、デクリメント計算を１０進数基準とする。
+" 007に対して<C-a>叩いた時に、010になるのを防ぐ
+set nrformats=
 
 
 
@@ -36,21 +39,25 @@ nnoremap <C-k> <C-b>
 nnoremap <C-h> ^
 nnoremap <C-l> g_
 
+nnoremap vrc  :vsp    ~/.vimrc<CR>
+nnoremap svrc :source ~/.vimrc<CR>
+
+
 " ----------------------------------------------------------------------------------------------------
 " 入力モードでのカーソル移動
 " ----------------------------------------------------------------------------------------------------
 " inoremap <C-j> <C-f>
 " inoremap <C-k> <C-b>
-" inoremap <C-h> ^
-" inoremap <C-l> g_
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
-inoremap <C-h> <Left>
-inoremap <C-l> <Right>
-inoremap <C-ｊ> <Down>
-inoremap <C-ｋ> <Up>
-inoremap <C-ｈ> <Left>
-inoremap <C-ｌ> <Right>
+inoremap <C-h> ^
+inoremap <C-l> g_
+" inoremap <C-j> <Down>
+" inoremap <C-k> <Up>
+" inoremap <C-h> <Left>
+" inoremap <C-l> <Right>
+" inoremap <C-ｊ> <Down>
+" inoremap <C-ｋ> <Up>
+" inoremap <C-ｈ> <Left>
+" inoremap <C-ｌ> <Right>
 inoremap ・ <ESC>/
 
 " ----------------------------------------------------------------------------------------------------
