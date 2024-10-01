@@ -1,5 +1,20 @@
 # dotfiles
 
+## SSHキー作成
+
+    # ホームディレクトリ移動
+    cd $HOME
+
+    # SSHキー作成
+    ssh-keygen -t ed25519 -C "daisuke6106@gmail.com" -f ~/.ssh/daisuke6106.github
+    
+    # SSH プライベートキーを ssh-agent に追加します。
+    ssh-add ~/.ssh/daisuke6106.github
+
+    # SSHをクリップボードにコピー（UBUNTU）
+    cat /.ssh/daisuke6106.github.pub | xsel --clipboard --input
+
+  
 ## VIM設定ファイルの適用
 
     # インストール
