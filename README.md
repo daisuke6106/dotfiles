@@ -1,5 +1,21 @@
 # dotfiles
 
+## github init
+    
+    # sshkeygen
+    cd ~/.ssh
+    ssh-keygen -t rsa -b 4096 -C daisuke6106@gmail.com -f daisuke6106.github
+    # -t 暗号化方式を指定 , -b 暗号化強度を指定 , -C コメントを設定
+    # setsuokukakunin
+    ssh -T git@github.com
+    # clone
+    mkdir ~/github_workspace
+    cd ~/github_workspace
+    git clone git@github.com:daisuke6106/dotfiles.git
+    # config setting
+    git config --global user.email daisuke6106@gmail.com
+    git config --global user.name daisuke6106
+
 ## SSHキー作成
 
     # ホームディレクトリ移動
