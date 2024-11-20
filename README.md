@@ -15,6 +15,7 @@
     # config setting
     git config --global user.email daisuke6106@gmail.com
     git config --global user.name daisuke6106
+    git config --global core.editor vim
 
 ## SSHキー作成
 
