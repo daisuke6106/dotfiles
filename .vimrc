@@ -34,6 +34,18 @@ inoremap <silent> っｊ <ESC>
 " ----------------------------------------------------------------------------------------------------
 " 指定文字で囲む
 " ----------------------------------------------------------------------------------------------------
+nnoremap s' ciw''<Esc>P
+nnoremap s' ciw''<Esc>P
+nnoremap s" ciw""<Esc>P
+nnoremap s( ciw()<Esc>P
+nnoremap s) ciw()<Esc>P
+nnoremap s[ ciw[]<Esc>P
+nnoremap s] ciw[]<Esc>P
+nnoremap s{ ciw{}<Esc>P
+nnoremap s} ciw{}<Esc>P
+nnoremap s< ciw<><Esc>P
+nnoremap s> ciw<><Esc>P
+
 xnoremap s' c''<Esc>P
 xnoremap s" c""<Esc>P
 xnoremap s( c()<Esc>P
