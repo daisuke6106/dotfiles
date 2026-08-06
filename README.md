@@ -155,5 +155,13 @@
 
 
 
+## Claude Code グローバル設定ファイルの適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.org
+    # ファイルをシンボリックリンクで差し替え
+    mkdir -p ~/.claude
+    ln -s $(pwd)/.claude/CLAUDE.md ~/.claude/CLAUDE.md
+
 ## クローン済のリポジトリがpull,pushできなかった場合
 git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
