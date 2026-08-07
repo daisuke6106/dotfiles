@@ -2,36 +2,24 @@
 
 ## github init
     
-    # sshkeygen
+    # sshキー生成
     cd ~/.ssh
-    ssh-keygen -t rsa -b 4096 -C daisuke6106@gmail.com -f daisuke6106.github
     # -t 暗号化方式を指定 , -b 暗号化強度を指定 , -C コメントを設定
-    # setsuokukakunin
+    ssh-keygen -t rsa -b 4096 -C daisuke6106@gmail.com -f daisuke6106.github
+
+    # 接続確認
     ssh -T git@github.com
+
     # clone
     mkdir ~/github_workspace
     cd ~/github_workspace
     git clone git@github.com:daisuke6106/dotfiles.git
+
     # config setting
     git config --global user.email daisuke6106@gmail.com
     git config --global user.name daisuke6106
     git config --global core.editor vim
 
-## SSHキー作成
-
-    # ホームディレクトリ移動
-    cd $HOME
-
-    # SSHキー作成
-    ssh-keygen -t ed25519 -C "daisuke6106@gmail.com" -f ~/.ssh/daisuke6106.github
-    
-    # SSH プライベートキーを ssh-agent に追加します。
-    ssh-add ~/.ssh/daisuke6106.github
-
-    # SSHをクリップボードにコピー（UBUNTU）
-    cat /.ssh/daisuke6106.github.pub | xsel --clipboard --input
-
-  
 ## VIM設定ファイルの適用
 
     # インストール
