@@ -76,6 +76,15 @@
         . ~/.bash_aliases
     fi
 
+## tmux設定ファイルの適用
+
+    # インストール
+    sudo apt-get install tmux
+    # 現存ファイルのバックアップ
+    mv ~/.tmux.conf ~/.tmux.conf.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.tmux.conf ~/.tmux.conf
+
 ## terminator設定ファイルの適用
 
     # インストール
