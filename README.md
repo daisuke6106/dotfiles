@@ -204,3 +204,11 @@ mv ~/.claude/settings.json ~/.claude/settings.json.org
 mkdir -p ~/.claude
 ln -s $(pwd)/.claude/settings.json ~/.claude/settings.json
 ```
+
+## 環境
+
+### hosts, services
+
+以下参照
+
+[etcfiles](https://github.com/daisuke6106/etcfiles)
