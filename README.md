@@ -1,7 +1,9 @@
 # dotfiles
 
-## github init
-    
+## 初期セットアップ
+
+### github init
+
     # sshキー生成
     cd ~/.ssh
     # -t 暗号化方式を指定 , -b 暗号化強度を指定 , -C コメントを設定
@@ -20,7 +22,9 @@
     git config --global user.name daisuke6106
     git config --global core.editor vim
 
-## VIM設定ファイルの適用
+## エディタ設定
+
+### VIM設定ファイルの適用
 
     # インストール
     sudo apt-get install vim
@@ -51,67 +55,7 @@
     # .vim設定フォルダをシンボリックリンクで作成
     ln -s $(pwd)/.vim /c/Users/daisuke6106/.vim
 
-## path設定ファイルの適用
-
-    # 現存ファイルのバックアップ mv ~/.bash_path ~/.bash_path.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.bash_path ~/.bash_path
-
-    # .bashrcに追加
-    vi ~/.bashrc
-    if [ -f ~/.bash_path ]; then
-        . ~/.bash_path
-    fi
-
-## alias設定ファイルの適用
-
-    # 現存ファイルのバックアップ
-    mv ~/.bash_aliases ~/.bash_aliases.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.bash_aliases ~/.bash_aliases
-
-    # .bashrcに追加
-    vi ~/.bashrc
-    if [ -f ~/.bash_aliases ]; then
-        . ~/.bash_aliases
-    fi
-
-## tmux設定ファイルの適用
-
-    # インストール
-    sudo apt-get install tmux
-    # 現存ファイルのバックアップ
-    mv ~/.tmux.conf ~/.tmux.conf.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.tmux.conf ~/.tmux.conf
-
-## terminator設定ファイルの適用
-
-    # インストール
-    sudo apt-get install terminator
-    # 現存ファイルのバックアップ
-    mkdir -p ~/.config/terminator
-    mv ~/.config/terminator/config ~/.config/terminator/config.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.config/terminator/config ~/.config/terminator/config
-
-## GIT設定ファイルの適用
-
-    # インストール
-    sudo apt-get install git
-    # 現存ファイルのバックアップ
-    mv ~/.gitconfig ~/.gitconfig.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.gitconfig ~/.gitconfig
-
-## .sshファイルの適用
-
-    # 現存ファイルのバックアップ
-    mv ~/.ssh ~/.ssh.org
-    # ファイルをシンボリックリンクで差し替え
-    ln -s `pwd`/.ssh ~/.ssh
-
-## VSCode設定ファイルの設定
+### VSCode設定ファイルの設定
 
     # ----------------------------------------------------------------------------------------------------
     # Ubuntuの場合
@@ -149,10 +93,79 @@
     # 設定ファイルをシンボリックリンクで作成
     ln -s $(pwd)/.vscode/settings.json /c/Users/daisuke6106/AppData/Roaming/Code/User/settings.json
 
+## シェル設定
 
+### path設定ファイルの適用
 
+    # 現存ファイルのバックアップ mv ~/.bash_path ~/.bash_path.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.bash_path ~/.bash_path
 
-## Claude Code グローバル設定ファイルの適用
+    # .bashrcに追加
+    vi ~/.bashrc
+    if [ -f ~/.bash_path ]; then
+        . ~/.bash_path
+    fi
+
+### alias設定ファイルの適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.bash_aliases ~/.bash_aliases.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.bash_aliases ~/.bash_aliases
+
+    # .bashrcに追加
+    vi ~/.bashrc
+    if [ -f ~/.bash_aliases ]; then
+        . ~/.bash_aliases
+    fi
+
+## ターミナル設定
+
+### tmux設定ファイルの適用
+
+    # インストール
+    sudo apt-get install tmux
+    # 現存ファイルのバックアップ
+    mv ~/.tmux.conf ~/.tmux.conf.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.tmux.conf ~/.tmux.conf
+
+### terminator設定ファイルの適用
+
+    # インストール
+    sudo apt-get install terminator
+    # 現存ファイルのバックアップ
+    mkdir -p ~/.config/terminator
+    mv ~/.config/terminator/config ~/.config/terminator/config.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.config/terminator/config ~/.config/terminator/config
+
+## Git関連設定
+
+### GIT設定ファイルの適用
+
+    # インストール
+    sudo apt-get install git
+    # 現存ファイルのバックアップ
+    mv ~/.gitconfig ~/.gitconfig.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.gitconfig ~/.gitconfig
+
+### .sshファイルの適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.ssh ~/.ssh.org
+    # ファイルをシンボリックリンクで差し替え
+    ln -s `pwd`/.ssh ~/.ssh
+
+### クローン済のリポジトリがpull,pushできなかった場合
+
+    git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
+
+## Claude Code設定
+
+### Claude Code グローバル設定ファイルの適用
 
     # 現存ファイルのバックアップ
     mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.org
@@ -160,13 +173,10 @@
     mkdir -p ~/.claude
     ln -s $(pwd)/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 
-## Claude Code グローバル設定(settings.json)の適用
+### Claude Code グローバル設定(settings.json)の適用
 
     # 現存ファイルのバックアップ
     mv ~/.claude/settings.json ~/.claude/settings.json.org
     # ファイルをシンボリックリンクで差し替え
     mkdir -p ~/.claude
     ln -s $(pwd)/.claude/settings.json ~/.claude/settings.json
-
-## クローン済のリポジトリがpull,pushできなかった場合
-git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
