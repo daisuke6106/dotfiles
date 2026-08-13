@@ -160,5 +160,13 @@
     mkdir -p ~/.claude
     ln -s $(pwd)/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 
+## Claude Code グローバル設定(settings.json)の適用
+
+    # 現存ファイルのバックアップ
+    mv ~/.claude/settings.json ~/.claude/settings.json.org
+    # ファイルをシンボリックリンクで差し替え
+    mkdir -p ~/.claude
+    ln -s $(pwd)/.claude/settings.json ~/.claude/settings.json
+
 ## クローン済のリポジトリがpull,pushできなかった場合
 git remote set-url origin git@github.com:daisuke6106/$(basename $(pwd)).git
