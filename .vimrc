@@ -370,9 +370,9 @@ nnoremap <leader>md :!glow %<CR>
 " bashで実行
 " ----------------------------------------------------------------------------------------------------
 " ※端末ではCtrl+EnterがEnter(^M)と区別できないため<leader>に割り当てる
-" <leader>r : 現在行／選択行をbashで実行し、結果を表示する（バッファは変更しない）
+" <leader>b : 現在行／選択行をbashで実行し、結果を表示する（バッファは変更しない）
 nnoremap <leader>b :.w !bash<CR>
 xnoremap <leader>b :w !bash<CR>
-" <leader>R : 現在行／選択行をbashで実行し、結果で置き換える
+" <leader>B : 現在行／選択行をbashで実行し、結果で置き換える
 nnoremap <leader>B :.!bash<CR>
 xnoremap <leader>B :!bash<CR>
