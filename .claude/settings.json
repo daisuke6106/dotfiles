@@ -1,6 +1,4 @@
 {
-  "effortLevel": "high",
-  "theme": "dark",
   "permissions": {
     "allow": [
       "Bash(git status)",
@@ -34,5 +32,8 @@
       "Bash(mv *)",
       "Bash(cp *)"
     ]
-  }
+  },
+  "effortLevel": "high",
+  "theme": "dark",
+  "agentPushNotifEnabled": true
 }
