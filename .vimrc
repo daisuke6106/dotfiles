@@ -355,6 +355,35 @@ command! -range -nargs=1 SpacePadRight <line1>,<line2>s/\S\+/\=printf('%-'.<args
 " ----------------------------------------------------------------------------------------------------
 command! -range SpacePadReverse <line1>,<line2>s/^\(\s*\)\(.\{-}\)\(\s*\)$/\=submatch(3).submatch(2).submatch(1)/
 " ----------------------------------------------------------------------------------------------------
+" 矩形選択範囲内のスペースパディングを逆転する(矩形内の先頭の空白と末尾の空白を入れ替える)
+" 使い方: 矩形選択(Ctrl+v)で対象範囲を選択 → :SpacePadReverseBlock と入力してEnter
+"   矩形の外側の文字は変更しない
+"   例)|id|     foo|x
+"      |id|  barbaz|x
+"      の「     foo」「  barbaz」の列を矩形選択して :SpacePadReverseBlock を実行すると
+"      |id|foo     |x
+"      |id|barbaz  |x
+"      になる(もう一度実行すると元に戻る)
+" ----------------------------------------------------------------------------------------------------
+" 指定行範囲のうち、直前の矩形選択の列範囲に含まれる部分の先頭空白と末尾空白を入れ替える
+" @param line1 対象範囲の開始行
+" @param line2 対象範囲の終了行
+function! s:SpacePadReverseBlock(line1, line2) abort
+  " virtualedit=block で行末より先を選択した場合に備え、マークのoff(行末からのはみ出し量)も加味する
+  let l:cols = []
+  for l:mark in ["'<", "'>"]
+    let l:pos = getpos(l:mark)
+    call extend(l:cols, map(virtcol(l:pos[1:2], 1), 'v:val + l:pos[3]'))
+  endfor
+  let l:vstart = min(l:cols)
+  let l:vend   = max(l:cols)
+  " 矩形の開始列から、終了列の次の位置までを1回でマッチさせる
+  let l:pat = '\%' . l:vstart . 'v.*\%<' . (l:vend + 2) . 'v'
+  execute a:line1 . ',' . a:line2 . 's/' . l:pat
+        \ . '/\=substitute(submatch(0), ''^\(\s*\)\(.\{-}\)\(\s*\)$'', ''\3\2\1'', '''')/e'
+endfunction
+command! -range SpacePadReverseBlock call s:SpacePadReverseBlock(<line1>, <line2>)
+" ----------------------------------------------------------------------------------------------------
 " 
 " ----------------------------------------------------------------------------------------------------
 nnoremap dirname  :%s/\/[^\/]\+$//g<CR>
