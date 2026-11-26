@@ -222,7 +222,7 @@ function_template() (
 # --------------------------------------------------------------------------------------------------
 # [概要] プロセス毎のメモリ使用率を出力
 # [詳細] 全プロセスのメモリ使用率を1プロセス＝1行で、使用率が高い順に標準出力へ出力する。
-#        出力項目: PID / USER / %MEM / RSS(KB) / COMMAND
+#        出力項目: PID / USER / %MEM / RSS(MB、小数第1位まで) / COMMAND
 #        -n 指定時は上位N件のみ出力する（ヘッダ行は件数に含めない）。
 #        -f 指定時は COMMAND に引数を含むコマンドライン全体を出力する。
 # [種類] 関数
@@ -290,12 +290,18 @@ d_mem_usage() (
     #   -e     : 全プロセスを対象
     #   -ww    : 端末幅で切り詰めない（1行に全体を出力）
     #   --sort : -%mem で使用率の高い順
-    if [[ -n "${NUM}" ]]; then
-        # ヘッダ行 + 上位NUM件
-        ps -e -ww -o pid,user,%mem,rss,${cmd_column} --sort=-%mem | head -n $(( NUM + 1 ))
-    else
-        ps -e -ww -o pid,user,%mem,rss,${cmd_column} --sort=-%mem
-    fi
+    # awk で整形（ps は RSS を KB でしか出力できないため MB へ変換する）
+    #   num     : 出力件数（0 は全件）
+    #   cmd     : 先頭4項目を除いた残り。COMMAND に空白が含まれても崩れないよう $5 ではなく行から切り出す
+    ps -e -ww --no-headers -o pid,user,%mem,rss,${cmd_column} --sort=-%mem \
+        | awk -v num="${NUM:-0}" '
+            BEGIN { printf "%7s %-8s %5s %9s %s\n", "PID", "USER", "%MEM", "RSS(MB)", "COMMAND" }
+            num > 0 && NR > num { exit }
+            {
+                cmd = $0
+                sub(/^ *[^ ]+ +[^ ]+ +[^ ]+ +[^ ]+ /, "", cmd)
+                printf "%7s %-8s %5s %9.1f %s\n", $1, $2, $3, $4 / 1024, cmd
+            }'
 
     exit 0
 )
