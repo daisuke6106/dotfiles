@@ -9,10 +9,10 @@
     // ####################################################################################################
     "vim.vimrc.enable": true,
     // Linux用
-    // "vim.vimrc.path": "/home/daisuke6106/github_workspace/dotfiles/.vimrc",
+    "vim.vimrc.path": "/home/daisuke6106/github_workspace/dotfiles/.vimrc",
     // Mac用
     // "vim.vimrc.path": "/Users/dk/github_workspace/dotfiles/.vimrc",
     // windows用
-    "vim.vimrc.path": "c:\\Users\\daisuke6106\\github_workspace\\dotfiles\\.vimrc",
+    // "vim.vimrc.path": "c:\\Users\\daisuke6106\\github_workspace\\dotfiles\\.vimrc",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
 }
