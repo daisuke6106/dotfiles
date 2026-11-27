@@ -205,6 +205,31 @@ mkdir -p ~/.claude
 ln -s $(pwd)/.claude/settings.json ~/.claude/settings.json
 ```
 
+### Claude Code サブエージェント(agents)の適用
+
+実装(implementer)・コードレビュー(code-reviewer)・テスト実装(test-writer)のサブエージェントを適用する。
+
+```bash
+# 現存ディレクトリのバックアップ
+mv ~/.claude/agents ~/.claude/agents.org
+# ディレクトリをシンボリックリンクで差し替え
+mkdir -p ~/.claude
+ln -s $(pwd)/.claude/agents ~/.claude/agents
+```
+
+### Claude Code スキル(dev-flow)の適用
+
+実装→コードレビュー→テスト実装をサブエージェントで順に実行するスキル。`/dev-flow <タスク内容>` で起動する。
+`~/.claude/skills` には他のスキルも配置されるため、ディレクトリ全体ではなくスキル単位でリンクする。
+
+```bash
+# 現存ディレクトリのバックアップ
+mv ~/.claude/skills/dev-flow ~/.claude/skills/dev-flow.org
+# スキルをシンボリックリンクで配置
+mkdir -p ~/.claude/skills
+ln -s $(pwd)/.claude/skills/dev-flow ~/.claude/skills/dev-flow
+```
+
 ## 環境
 
 ### hosts, services
