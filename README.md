@@ -34,7 +34,7 @@ sudo apt-get install vim
 # 現存ファイルのバックアップ
 mv ~/.vimrc ~/.vimrc.org
 # .vimrc設定ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.vimrc ~/.vimrc
+ln -s $(pwd)/.vimrc ~/.vimrc
 # .vim設定ファイルをシンボリックリンクで作成
 ln -s $(pwd)/.vim ~/.vim
 
@@ -106,7 +106,7 @@ ln -s $(pwd)/.vscode/settings.json /c/Users/daisuke6106/AppData/Roaming/Code/Use
 ```bash
 # 現存ファイルのバックアップ mv ~/.bash_path ~/.bash_path.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.bash_path ~/.bash_path
+ln -s $(pwd)/.bash_path ~/.bash_path
 
 # .bashrcに追加
 vi ~/.bashrc
@@ -121,7 +121,7 @@ fi
 # 現存ファイルのバックアップ
 mv ~/.bash_aliases ~/.bash_aliases.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.bash_aliases ~/.bash_aliases
+ln -s $(pwd)/.bash_aliases ~/.bash_aliases
 
 # .bashrcに追加
 vi ~/.bashrc
@@ -140,7 +140,7 @@ sudo apt-get install tmux
 # 現存ファイルのバックアップ
 mv ~/.tmux.conf ~/.tmux.conf.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.tmux.conf ~/.tmux.conf
+ln -s $(pwd)/.tmux.conf ~/.tmux.conf
 ```
 
 ### terminator設定ファイルの適用
@@ -152,7 +152,7 @@ sudo apt-get install terminator
 mkdir -p ~/.config/terminator
 mv ~/.config/terminator/config ~/.config/terminator/config.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.config/terminator/config ~/.config/terminator/config
+ln -s $(pwd)/.config/terminator/config ~/.config/terminator/config
 ```
 
 ## Git関連設定
@@ -165,7 +165,7 @@ sudo apt-get install git
 # 現存ファイルのバックアップ
 mv ~/.gitconfig ~/.gitconfig.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.gitconfig ~/.gitconfig
+ln -s $(pwd)/.gitconfig ~/.gitconfig
 ```
 
 ### .sshファイルの適用
@@ -174,7 +174,7 @@ ln -s `pwd`/.gitconfig ~/.gitconfig
 # 現存ファイルのバックアップ
 mv ~/.ssh ~/.ssh.org
 # ファイルをシンボリックリンクで差し替え
-ln -s `pwd`/.ssh ~/.ssh
+ln -s $(pwd)/.ssh ~/.ssh
 ```
 
 ### クローン済のリポジトリがpull,pushできなかった場合
